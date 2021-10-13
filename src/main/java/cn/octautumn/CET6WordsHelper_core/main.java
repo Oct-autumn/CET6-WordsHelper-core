@@ -1,37 +1,52 @@
 package cn.octautumn.CET6WordsHelper_core;
 
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.screen.*;
+import com.googlecode.lanterna.terminal.*;
+import com.fasterxml.jackson.*;
+
+import java.io.IOException;
 import java.util.Scanner;
 
 public class main
 {
-    public static void main(String[] args)
+    public static Scanner consoleIn = new Scanner(System.in);
+    public static Terminal terminal;
+    public static Screen screen;
+
+    public static void main(String[] args) throws IOException
     {
-        Scanner consoleIn = new Scanner(System.in);
+        terminal = new DefaultTerminalFactory().createTerminal();
 
-        System.out.println("+------------------------+");
-        System.out.println("|         Welcome        |");
-        System.out.println("|  1.En -> Ch            |");
-        System.out.println("|  2.Ch -> En            |");
-        System.out.println("|  3.Count               |");
-        System.out.println("|                        |");
-        System.out.println("|  0.Exit                |");
-        System.out.println("+------------------------+");
-        System.out.println("Please select a func(0~3): ");
+        //新建屏幕并启动它
+        screen = new TerminalScreen(terminal);
+        screen.startScreen();
 
-        String sel = consoleIn.next();
-        switch (sel)
-        {
-            case "1":
-                break;
-            case "2":
-                break;
-            case "3":
-                break;
-            case "0":
-                break;
-            default:
+        // 创建GUI模块并启动它
+        MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
 
-                break;
-        }
+        onLoad(gui);
+
+        gui.waitForWindowToClose(gui.getActiveWindow());
+    }
+
+    private static void onLoad(MultiWindowTextGUI gui) throws IOException
+    {
+        // 创建一个窗口来装载面板
+        BasicWindow loadingWindow = new BasicWindow();
+        // 创建一个面板来装载组件
+        Panel loadingPanel = new Panel();
+        loadingPanel.setLayoutManager(new GridLayout(2));
+
+        loadingPanel.addComponent(new Label("正在加载词汇..."));
+        Label wordCountLabel = new Label("");
+        wordCountLabel.setText("0/0");
+        loadingPanel.addComponent(wordCountLabel);
+
+        loadingWindow.setComponent(loadingPanel);
+        gui.addWindow(loadingWindow);
+
+
     }
 }
