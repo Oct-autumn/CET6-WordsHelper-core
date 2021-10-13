@@ -8,12 +8,14 @@ import com.googlecode.lanterna.terminal.*;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class main
+public class Main
 {
-    public static Scanner consoleIn = new Scanner(System.in);
+    //public static Scanner consoleIn = new Scanner(System.in);
     public static Terminal terminal;
     public static Screen screen;
     public static MultiWindowTextGUI MultiWindowGUI;
+    public static final String fileSeparator = System.getProperty("file.separator");
+    public static final String WorkingDir = System.getProperty("user.dir");
 
     public static void main(String[] args) throws IOException
     {
