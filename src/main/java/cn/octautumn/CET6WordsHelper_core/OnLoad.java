@@ -1,11 +1,13 @@
 package cn.octautumn.CET6WordsHelper_core;
 
-import cn.octautumn.CET6WordsHelper_core.WordListClass.WordList;
+import cn.octautumn.CET6WordsHelper_core.WordListClass.ChTrans;
+import cn.octautumn.CET6WordsHelper_core.WordListClass.DictEntry;
 import com.googlecode.lanterna.gui2.*;
 import com.fasterxml.jackson.databind.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import static cn.octautumn.CET6WordsHelper_core.Main.*;
@@ -58,9 +60,40 @@ public class OnLoad
                             "Err-001 词库文件校验失败\n" +
                                     "是否手动导入已有词库？（取消将自动加载包内词库）"
                     ).showDialog(gui);
-                    System.out.println("1");
                 }
             }
+
+            //构造词库数据结构
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode WordListJson = mapper.readTree(wordListJsonFile);
+            int wordCount = 0;
+
+            for (Iterator<JsonNode> it = WordListJson.get("data").iterator(); it.hasNext(); wordCount++)
+            {
+                JsonNode NowEntry = it.next();
+                DictEntry newEntry = new DictEntry();
+
+                newEntry.setId(NowEntry.get("id").asInt()).
+                        setEnS(NowEntry.get("EnS").asText());
+
+                for (JsonNode NowChTrans : NowEntry.get("ChS"))
+                {
+                    ChTrans newChTrans = new ChTrans();
+
+                    newChTrans.setId(NowChTrans.get("id").asInt())
+                            .setPos(NowChTrans.get("pos").asText());
+
+                    for (JsonNode jsonNode : NowEntry.get("mean"))
+                    {
+                        newChTrans.addMean(jsonNode.asText());
+                    }
+
+                    newEntry.addChS(newChTrans);
+                }
+
+                wordList.addEntry(wordCount, newEntry);
+            }
+
         } catch (RuntimeException exception)
         {
             System.out.println(exception);

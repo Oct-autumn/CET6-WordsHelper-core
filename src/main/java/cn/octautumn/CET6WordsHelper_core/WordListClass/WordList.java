@@ -5,56 +5,27 @@ import java.util.List;
 
 public class WordList
 {
-    private class Entry
+    String Verify;
+    HashMap<Integer, DictEntry> DATA;
+
+    public void setVerify(String verify)
     {
-        private class ChTrans
-        {
-            int id;
-            String Pos;
-            List<String> mean;
-
-            public int getId()
-            {
-                return id;
-            }
-
-            public List<String> getMean()
-            {
-                return mean;
-            }
-
-            public String getPos()
-            {
-                return Pos;
-            }
-        }
-
-        int id;
-        String EnS;
-        List<ChTrans> ChS;
-
-        public int getId()
-        {
-            return id;
-        }
-
-        public String getEnS()
-        {
-            return EnS;
-        }
-
-        public List<ChTrans> getChS()
-        {
-            return ChS;
-        }
+        Verify = verify;
     }
 
-    String Verify;
-    HashMap<Integer, Entry> data;
-
-    public HashMap<Integer, Entry> getData()
+    public void setDATA(HashMap<Integer, DictEntry> data)
     {
-        return data;
+        this.DATA = data;
+    }
+
+    public void addEntry(int key, DictEntry entry)
+    {
+        DATA.put(key, entry);
+    }
+
+    public HashMap<Integer, DictEntry> getData()
+    {
+        return DATA;
     }
 
     public String getVerify()
