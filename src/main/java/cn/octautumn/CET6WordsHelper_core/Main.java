@@ -1,5 +1,6 @@
 package cn.octautumn.CET6WordsHelper_core;
 
+import cn.octautumn.CET6WordsHelper_core.WordListClass.WordList;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.screen.*;
@@ -16,6 +17,7 @@ public class Main
     public static MultiWindowTextGUI MultiWindowGUI;
     public static final String fileSeparator = System.getProperty("file.separator");
     public static final String WorkingDir = System.getProperty("user.dir");
+    public static WordList wordList;
 
     public static void main(String[] args) throws IOException
     {

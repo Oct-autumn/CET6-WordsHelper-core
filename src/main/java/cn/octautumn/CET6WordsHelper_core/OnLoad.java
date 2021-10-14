@@ -1,6 +1,8 @@
 package cn.octautumn.CET6WordsHelper_core;
 
+import cn.octautumn.CET6WordsHelper_core.WordListClass.WordList;
 import com.googlecode.lanterna.gui2.*;
+import com.fasterxml.jackson.databind.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +36,9 @@ public class OnLoad
             wordListJsonFile = new File(JsonFilePath);
             if (!wordListJsonFile.exists())
             {
-                WarningDialog_WordListDamage warningDlg = new WarningDialog_WordListDamage("错误", "Err-000 未能找到词库文件(CET6-Words.json)\n是否手动导入？");
+                WarningDialog_WordListDamage warningDlg = new WarningDialog_WordListDamage("错误",
+                        "Err-000 未能找到词库文件(CET6-Words.json)\n" +
+                                "是否手动导入？（取消将自动加载包内词库）");
                 warningDlg.showDialog(gui);
                 try
                 {
@@ -47,6 +51,10 @@ public class OnLoad
                     e.printStackTrace();
                 }
 
+                ObjectMapper mapper = new ObjectMapper();
+
+                JsonNode WordListJson = mapper.readTree(wordListJsonFile);
+                //WordList wordList_inst = WordListJson
             }
         }
         catch (RuntimeException exception)
