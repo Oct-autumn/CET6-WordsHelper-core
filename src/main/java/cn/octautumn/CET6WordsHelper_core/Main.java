@@ -23,10 +23,10 @@ public class Main
     {
         terminal = new DefaultTerminalFactory().createTerminal();
 
-        //新建屏幕并启动它
+        //新建屏幕并启动
         screen = new TerminalScreen(terminal);
         screen.startScreen();
-        // 创建GUI模块并启动它
+        // 创建GUI模块并启动
         MultiWindowGUI = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
 
         OnLoad.onLoad(MultiWindowGUI);
