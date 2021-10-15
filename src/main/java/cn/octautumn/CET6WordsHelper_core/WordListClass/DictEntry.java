@@ -1,13 +1,20 @@
 package cn.octautumn.CET6WordsHelper_core.WordListClass;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class DictEntry
 {
 
     int id;
     String EnS;
-    List<ChTrans> ChS;
+    ArrayList<ChTrans> ChS;
+
+    public DictEntry()
+    {
+        id = 0;
+        EnS = "";
+        ChS = new ArrayList<>();
+    }
 
     public DictEntry setId(int id)
     {
@@ -37,7 +44,7 @@ public class DictEntry
         return EnS;
     }
 
-    public List<ChTrans> getChS()
+    public ArrayList<ChTrans> getChS()
     {
         return ChS;
     }

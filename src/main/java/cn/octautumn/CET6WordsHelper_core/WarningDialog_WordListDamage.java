@@ -30,7 +30,7 @@ public class WarningDialog_WordListDamage extends WarningDialog
                     .setActionLabel("Open")
                     .build()
                     .showDialog(getTextGUI());
-        }while(!input.exists());
+        }while(input == null || !input.exists());
         OnLoad.wordListJsonFile = input;
         WarningDialog_WordListDamage.this.close();
     }

@@ -1,12 +1,17 @@
 package cn.octautumn.CET6WordsHelper_core.WordListClass;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class WordList
 {
     String Verify;
     HashMap<Integer, DictEntry> DATA;
+
+    public WordList()
+    {
+        Verify = "";
+        DATA = new HashMap<>();
+    }
 
     public void setVerify(String verify)
     {

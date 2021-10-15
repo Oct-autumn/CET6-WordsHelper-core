@@ -1,12 +1,19 @@
 package cn.octautumn.CET6WordsHelper_core.WordListClass;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class ChTrans
 {
     int id;
-    String Pos;
-    List<String> mean;
+    String pos;
+    ArrayList<String> mean;
+
+    public ChTrans()
+    {
+        id = 0;
+        pos = "";
+        mean = new ArrayList<>();
+    }
 
     public ChTrans setId(int id)
     {
@@ -16,7 +23,7 @@ public class ChTrans
 
     public ChTrans setPos(String pos)
     {
-        Pos = pos;
+        this.pos = pos;
         return this;
     }
 
@@ -31,13 +38,13 @@ public class ChTrans
         return id;
     }
 
-    public List<String> getMean()
+    public ArrayList<String> getMean()
     {
         return mean;
     }
 
     public String getPos()
     {
-        return Pos;
+        return pos;
     }
 }

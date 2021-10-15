@@ -16,7 +16,7 @@ public class OnLoad
 {
     public static File wordListJsonFile;
 
-    public static void onLoad(MultiWindowTextGUI gui) throws IOException
+    public static void onLoad(MultiWindowTextGUI gui) throws IOException, RuntimeException
     {
         // 创建一个窗口来装载面板
         BasicWindow loadingWindow = new BasicWindow();
@@ -34,69 +34,65 @@ public class OnLoad
         gui.addWindow(loadingWindow);
 
         //加载词库
-        try
+        final String JsonFilePath = WorkingDir + fileSeparator + "resources" + fileSeparator + "CET6-Words.json";
+        wordListJsonFile = new File(JsonFilePath);
+        if (!wordListJsonFile.exists())
         {
-            final String JsonFilePath = WorkingDir + fileSeparator + "resources" + fileSeparator + "CET6-Words.json";
-            wordListJsonFile = new File(JsonFilePath);
-            if (!wordListJsonFile.exists())
+            do
             {
-                do
-                {
-                    new WarningDialog_WordListDamage("错误",
-                            "Err-000 未能找到词库文件(CET6-Words.json)\n" +
-                                    "是否手动导入已有词库？（取消将自动加载包内词库）"
-                    ).showDialog(gui);
-                }while(wordListJsonFile == null || !wordListJsonFile.exists());
+                new WarningDialog_WordListDamage("错误",
+                        "Err-000 未能找到词库文件(CET6-Words.json)\n" +
+                                "是否手动导入已有词库？（取消将自动加载包内词库）"
+                ).showDialog(gui);
+            }while(wordListJsonFile == null || !wordListJsonFile.exists());
 
-                ObjectMapper mapper = new ObjectMapper();
-
-                while (true)
-                {
-                    JsonNode WordListJson = mapper.readTree(wordListJsonFile);
-                    if (WordListJson.has("Verify"))
-                        if (WordListJson.get("Verify").asText().equals("T2N0QXV0dW1u"))
-                            break;
-                    new WarningDialog_WordListDamage("错误",
-                            "Err-001 词库文件校验失败\n" +
-                                    "是否手动导入已有词库？（取消将自动加载包内词库）"
-                    ).showDialog(gui);
-                }
-            }
-
-            //构造词库数据结构
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode WordListJson = mapper.readTree(wordListJsonFile);
-            int wordCount = 0;
 
-            for (Iterator<JsonNode> it = WordListJson.get("data").iterator(); it.hasNext(); wordCount++)
+            while (true)
             {
-                JsonNode NowEntry = it.next();
-                DictEntry newEntry = new DictEntry();
+                JsonNode WordListJson = mapper.readTree(wordListJsonFile);
+                if (WordListJson.has("verify"))
+                    if (WordListJson.get("verify").asText().equals("T2N0QXV0dW1u"))
+                        break;
+                new WarningDialog_WordListDamage("错误",
+                        "Err-001 词库文件校验失败\n" +
+                                "是否手动导入已有词库？（取消将自动加载包内词库）"
+                ).showDialog(gui);
+            }
+        }
 
-                newEntry.setId(NowEntry.get("id").asInt()).
-                        setEnS(NowEntry.get("EnS").asText());
+        //构造词库数据结构
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode WordListJson = mapper.readTree(wordListJsonFile);
+        int wordSum = WordListJson.get("count").asInt();
+        int wordKey = 0;
 
-                for (JsonNode NowChTrans : NowEntry.get("ChS"))
+        for (Iterator<JsonNode> it = WordListJson.get("data").iterator(); it.hasNext(); wordKey++)
+        {
+            JsonNode NowEntry = it.next();
+            DictEntry newEntry = new DictEntry();
+
+            newEntry.setId(NowEntry.get("id").asInt()).
+                    setEnS(NowEntry.get("enS").asText());
+
+            for (JsonNode NowChTrans : NowEntry.get("chS"))
+            {
+                ChTrans newChTrans = new ChTrans();
+
+                newChTrans.setId(NowChTrans.get("id").asInt())
+                        .setPos(NowChTrans.get("pos").asText());
+
+                for (JsonNode NowMean : NowChTrans.get("mean"))
                 {
-                    ChTrans newChTrans = new ChTrans();
-
-                    newChTrans.setId(NowChTrans.get("id").asInt())
-                            .setPos(NowChTrans.get("pos").asText());
-
-                    for (JsonNode jsonNode : NowEntry.get("mean"))
-                    {
-                        newChTrans.addMean(jsonNode.asText());
-                    }
-
-                    newEntry.addChS(newChTrans);
+                    newChTrans.addMean(NowMean.asText());
                 }
 
-                wordList.addEntry(wordCount, newEntry);
+                newEntry.addChS(newChTrans);
             }
 
-        } catch (RuntimeException exception)
-        {
-            System.out.println(exception);
+            wordList.addEntry(wordKey, newEntry);
+            wordCountLabel.setText((wordKey + 1) + "/" + wordSum);
         }
+
     }
 }
