@@ -19,19 +19,24 @@ public class OnLoad
     public static void onLoad(MultiWindowTextGUI gui) throws IOException, RuntimeException
     {
         // 创建一个窗口来装载面板
-        BasicWindow loadingWindow = new BasicWindow();
+        BasicWindow loadingWindow = new BasicWindow("加载中");
         loadingWindow.setHints(List.of(Window.Hint.CENTERED));
         // 创建一个面板来装载组件
         Panel loadingPanel = new Panel();
         loadingPanel.setLayoutManager(new GridLayout(2));
 
         loadingPanel.addComponent(new Label("正在加载词汇..."));
+        loadingPanel.addComponent(new EmptySpace());
+
+        Label processLabel = new Label("□□□□□□□□□□");
+        loadingPanel.addComponent(processLabel);
         Label wordCountLabel = new Label("");
-        wordCountLabel.setText("0/0");
+        wordCountLabel.setText("0000/0000");
         loadingPanel.addComponent(wordCountLabel);
 
         loadingWindow.setComponent(loadingPanel);
         gui.addWindow(loadingWindow);
+        gui.setActiveWindow(loadingWindow);
 
         //加载词库
         final String JsonFilePath = WorkingDir + fileSeparator + "resources" + fileSeparator + "CET6-Words.json";
@@ -91,8 +96,26 @@ public class OnLoad
             }
 
             wordList.addEntry(wordKey, newEntry);
-            wordCountLabel.setText((wordKey + 1) + "/" + wordSum);
+            wordCountLabel.setText(String.format("%04d/%04d",wordKey + 1,wordSum));
+
+            int tmp_cal = (wordKey+1)*100 / wordSum;
+            String processStr = "■".repeat(Math.max(0, tmp_cal / 10)) +
+                    "□".repeat(Math.max(0, 10 - (tmp_cal / 10)));
+            processLabel.setText(processStr);
+
+            gui.updateScreen();
         }
 
+        try
+        {
+            Thread.sleep(1000);
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        gui.removeWindow(loadingWindow);
+        loadingWindow.close();
+        gui.updateScreen();
     }
 }

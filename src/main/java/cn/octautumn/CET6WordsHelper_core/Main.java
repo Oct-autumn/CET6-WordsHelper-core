@@ -30,7 +30,6 @@ public class Main
         MultiWindowGUI = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
 
         OnLoad.onLoad(MultiWindowGUI);
-
-        MultiWindowGUI.waitForWindowToClose(MultiWindowGUI.getActiveWindow());
+        OnRunning.ShowMenu(MultiWindowGUI);
     }
 }
