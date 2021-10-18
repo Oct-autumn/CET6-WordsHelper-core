@@ -1,7 +1,7 @@
 package cn.octautumn.CET6WordsHelper_core;
 
-import cn.octautumn.CET6WordsHelper_core.WordListClass.ChTrans;
-import cn.octautumn.CET6WordsHelper_core.WordListClass.DictEntry;
+import cn.octautumn.CET6WordsHelper_core.DictionaryClass.ChTrans;
+import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
 import com.googlecode.lanterna.gui2.*;
 import com.fasterxml.jackson.databind.*;
 
@@ -70,6 +70,7 @@ public class OnLoad
         ObjectMapper mapper = new ObjectMapper();
         JsonNode WordListJson = mapper.readTree(wordListJsonFile);
         int wordSum = WordListJson.get("count").asInt();
+        dictionary.setWordCount(wordSum);
         int wordKey = 0;
 
         for (Iterator<JsonNode> it = WordListJson.get("data").iterator(); it.hasNext(); wordKey++)
@@ -95,13 +96,12 @@ public class OnLoad
                 newEntry.addChS(newChTrans);
             }
 
-            wordList.addEntry(wordKey, newEntry);
+            dictionary.addEntry(wordKey, newEntry);
             wordCountLabel.setText(String.format("%04d/%04d",wordKey + 1,wordSum));
 
             int tmp_cal = (wordKey+1)*100 / wordSum;
-            String processStr = "█".repeat(Math.max(0, tmp_cal / 10)) +
-                    "▒".repeat(Math.max(0, 10 - (tmp_cal / 10)));
-            processLabel.setText(processStr);
+            processLabel.setText("█".repeat(Math.max(0, tmp_cal / 10)) +
+                    "▒".repeat(Math.max(0, 10 - (tmp_cal / 10))));
 
             gui.updateScreen();
         }

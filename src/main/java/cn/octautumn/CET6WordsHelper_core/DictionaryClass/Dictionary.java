@@ -1,14 +1,14 @@
-package cn.octautumn.CET6WordsHelper_core.WordListClass;
+package cn.octautumn.CET6WordsHelper_core.DictionaryClass;
 
 import java.util.HashMap;
 
-public class WordList
+public class Dictionary
 {
     private String Verify;
     private int wordCount;
     private HashMap<Integer, DictEntry> DATA;
 
-    public WordList()
+    public Dictionary()
     {
         Verify = "";
         DATA = new HashMap<>();

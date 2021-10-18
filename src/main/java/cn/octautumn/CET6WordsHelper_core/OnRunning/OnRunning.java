@@ -1,15 +1,12 @@
-package cn.octautumn.CET6WordsHelper_core;
+package cn.octautumn.CET6WordsHelper_core.OnRunning;
 
-import cn.octautumn.CET6WordsHelper_core.WordListClass.DictEntry;
+import cn.octautumn.CET6WordsHelper_core.Main;
+import cn.octautumn.CET6WordsHelper_core.OnRunning.CM1.RunMode1;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
-import com.googlecode.lanterna.gui2.menu.Menu;
-import com.googlecode.lanterna.gui2.menu.MenuItem;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class OnRunning
 {
@@ -63,29 +60,23 @@ public class OnRunning
         thisWindow.setHints(List.of(Window.Hint.CENTERED));
 
         Panel panel = new Panel();
-        panel.setLayoutManager(new GridLayout(2));
+        panel.setLayoutManager(new GridLayout(1));
 
-        Label processLabel = new Label("████████████████████");
-        panel.addComponent(processLabel);
-        Label countdownLabel = new Label("300s");
+        Label countdownLabel = new Label("████████████████████  300s");
         panel.addComponent(countdownLabel);
         Label wordLabel = new Label("");
         panel.addComponent(wordLabel);
-        panel.addComponent(new EmptySpace());
-
+        panel.addComponent(new Label("在下列选项中选出与该单词对应的译义"));
         ActionListBox selections = new ActionListBox(new TerminalSize(30, 4));
+        panel.addComponent(selections);
+        thisWindow.setComponent(panel);
 
-        int errorCount = 0;
-        for (int wordCount = 0; wordCount < 20; wordCount++)
-        {
-            ArrayList<DictEntry> selWord = new ArrayList<>();
-            for (int i = 0; i < 4; i++)
-            {
-                Main.wordList.getData().get(Math.random()*(Main.wordList.getDat))
-            }
-        }
+        Thread func = new Thread(new RunMode1.func(wordLabel, selections));
+        func.start();
+        Thread counter = new Thread(new RunMode1.Countdown(countdownLabel, func));
+        counter.start();
 
-        gui.addWindow(thisWindow);
+        gui.addWindowAndWait(thisWindow);
         gui.setActiveWindow(thisWindow);
         gui.updateScreen();
     }

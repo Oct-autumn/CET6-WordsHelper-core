@@ -1,4 +1,4 @@
-package cn.octautumn.CET6WordsHelper_core.WordListClass;
+package cn.octautumn.CET6WordsHelper_core.DictionaryClass;
 
 import java.util.ArrayList;
 

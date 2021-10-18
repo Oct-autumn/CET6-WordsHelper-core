@@ -1,13 +1,13 @@
 package cn.octautumn.CET6WordsHelper_core;
 
-import cn.octautumn.CET6WordsHelper_core.WordListClass.WordList;
+import cn.octautumn.CET6WordsHelper_core.OnRunning.OnRunning;
+import cn.octautumn.CET6WordsHelper_core.DictionaryClass.Dictionary;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.screen.*;
 import com.googlecode.lanterna.terminal.*;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Main
 {
@@ -17,7 +17,7 @@ public class Main
     public static MultiWindowTextGUI MultiWindowGUI;
     public static final String fileSeparator = System.getProperty("file.separator");
     public static final String WorkingDir = System.getProperty("user.dir");
-    public static WordList wordList = new WordList();
+    public static Dictionary dictionary = new Dictionary();
 
     public static void main(String[] args) throws IOException
     {
