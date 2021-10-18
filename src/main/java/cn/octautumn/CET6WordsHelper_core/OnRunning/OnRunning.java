@@ -71,13 +71,15 @@ public class OnRunning
         panel.addComponent(selections);
         thisWindow.setComponent(panel);
 
-        Thread func = new Thread(new RunMode1.func(wordLabel, selections));
+        RunMode1.func Mode1func = new RunMode1.func(thisWindow, wordLabel, selections, menuWindow);
+        Thread func = new Thread(Mode1func);
         func.start();
-        Thread counter = new Thread(new RunMode1.Countdown(countdownLabel, func));
+        Thread counter = new Thread(new RunMode1.Countdown(countdownLabel, Mode1func));
         counter.start();
 
         gui.addWindowAndWait(thisWindow);
-        gui.setActiveWindow(thisWindow);
+        if (gui.getWindows().contains(thisWindow))
+            gui.setActiveWindow(thisWindow);
         gui.updateScreen();
     }
 }
