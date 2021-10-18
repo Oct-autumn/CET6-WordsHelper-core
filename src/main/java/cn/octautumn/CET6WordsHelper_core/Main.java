@@ -27,9 +27,11 @@ public class Main
         screen = new TerminalScreen(terminal);
         screen.startScreen();
         // 创建GUI模块并启动
-        MultiWindowGUI = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
+        MultiWindowGUI = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE_BRIGHT));
 
         OnLoad.onLoad(MultiWindowGUI);
         OnRunning.ShowMenu(MultiWindowGUI);
+
+
     }
 }

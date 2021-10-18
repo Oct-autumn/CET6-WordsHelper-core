@@ -4,8 +4,9 @@ import java.util.HashMap;
 
 public class WordList
 {
-    String Verify;
-    HashMap<Integer, DictEntry> DATA;
+    private String Verify;
+    private int wordCount;
+    private HashMap<Integer, DictEntry> DATA;
 
     public WordList()
     {
@@ -23,6 +24,11 @@ public class WordList
         this.DATA = data;
     }
 
+    public void setWordCount(int wordCount)
+    {
+        this.wordCount = wordCount;
+    }
+
     public void addEntry(int key, DictEntry entry)
     {
         DATA.put(key, entry);
@@ -31,6 +37,11 @@ public class WordList
     public HashMap<Integer, DictEntry> getData()
     {
         return DATA;
+    }
+
+    public int getWordCount()
+    {
+        return wordCount;
     }
 
     public String getVerify()
