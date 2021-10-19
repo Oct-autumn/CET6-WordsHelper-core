@@ -1,77 +1,31 @@
-package cn.octautumn.CET6WordsHelper_core.OnRunning.CM1;
+package cn.octautumn.CET6WordsHelper_core.OnRunning.ChallengeMode;
 
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.ChTrans;
 import cn.octautumn.CET6WordsHelper_core.Main;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.Panel;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class RunMode1
+public class RunMode1 extends RunMode
 {
-    public static int getRandom(int start, int end)
-    {
-        return (int) (Math.random() * (end - start + 1) + start);
-    }
+        final Label wordLabel;
+        final Label tipLabel;
+        final ActionListBox transSelections;
+        final BasicWindow thisWindow;
+        final BasicWindow menuWindow;
 
-    public static class Countdown implements Runnable
-    {
-        public static boolean Running;
-        Label countDownLabel;
-        final func func;
-        int totalTime = 300;
-
-        public Countdown(Label label, func func)
-        {
-            Running = true;
-            countDownLabel = label;
-            this.func = func;
-        }
-
-        @Override
-        public void run()
-        {
-            int countTime = totalTime;
-            while (countTime != 0 && Running)
-            {
-                try
-                {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-
-                countTime--;
-                int tmp_cal = (countTime) * 100 / totalTime;
-                countDownLabel.setText("█".repeat(Math.max(0, tmp_cal / 5)) +
-                        "▒".repeat(Math.max(0, 20 - (tmp_cal / 5))) + String.format("  %3ds", countTime));
-            }
-
-            synchronized (func)
-            {
-                func.Status = 2;
-                func.notify();
-            }
-        }
-    }
-
-    public static class func implements Runnable
-    {
-        public int Status = 0; //0-Running 1-AnswerStop 2-TimeQuit 3-ErrorQuit 4-OtherStop/Quit
-        Label wordLabel;
-        ActionListBox transSelections;
-        BasicWindow thisWindow;
-        BasicWindow menuWindow;
-
-        public func(BasicWindow thisWindow, Label label, ActionListBox selections, BasicWindow menuWindow)
+        public RunMode1(BasicWindow thisWindow, BasicWindow menuWindow, Panel panel)
         {
             this.thisWindow = thisWindow;
-            wordLabel = label;
-            transSelections = selections;
+            this.wordLabel = (Label) panel.getChildrenList().get(1);
+            this.tipLabel = (Label) panel.getChildrenList().get(2);
+            this.transSelections = (ActionListBox) panel.getChildrenList().get(3);
             this.menuWindow = menuWindow;
         }
 
@@ -132,6 +86,7 @@ public class RunMode1
                         });
                     }
                 }
+                transSelections.setSelectedIndex(0);
 
                 Status = 1;
                 synchronized (this)
@@ -150,13 +105,8 @@ public class RunMode1
                 if (Status == 2)
                 {
                     wordLabel.setText("超时啦! 再接再厉吧.");
-                    transSelections.clearItems();
-                    transSelections.addItem("选择以退出", () -> {
-                        thisWindow.close();
-                        menuWindow.setVisible(true);
-                        Main.MultiWindowGUI.setActiveWindow(menuWindow);
-                        Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
-                    });
+                    wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                    showExitChoice();
                     return;
                 }
 
@@ -165,6 +115,7 @@ public class RunMode1
                     wordLabel.setText("恭喜你，回答正确.你已答对" + (wordCount - errorCount + 1) + "题");
                     try
                     {
+
                         Thread.sleep(1000);
                     } catch (InterruptedException e)
                     {
@@ -184,21 +135,23 @@ public class RunMode1
                     }
                     if (errorCount == 2)
                     {
-                        Countdown.Running = false;
+                        Status = 3;
                         wordLabel.setText("错误太多啦! 再接再厉吧.");
-                        transSelections.clearItems();
-                        transSelections.addItem("选择以退出", () -> {
-                            thisWindow.close();
-                            menuWindow.setVisible(true);
-                            Main.MultiWindowGUI.setActiveWindow(menuWindow);
-                            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
-                        });
+                        wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                        showExitChoice();
                         return;
                     }
                 }
             }
-            Countdown.Running = false;
+            Status = 4;
             wordLabel.setText("太棒了，你一共答对了" + (20 - errorCount) + "题");
+            wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+            showExitChoice();
+        }
+
+        private void showExitChoice()
+        {
+            tipLabel.setText("                                  ");
             transSelections.clearItems();
             transSelections.addItem("选择以退出", () -> {
                 thisWindow.close();
@@ -207,5 +160,4 @@ public class RunMode1
                 Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
             });
         }
-    }
 }

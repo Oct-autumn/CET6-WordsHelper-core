@@ -1,7 +1,7 @@
 package cn.octautumn.CET6WordsHelper_core.OnRunning;
 
 import cn.octautumn.CET6WordsHelper_core.Main;
-import cn.octautumn.CET6WordsHelper_core.OnRunning.CM1.RunMode1;
+import cn.octautumn.CET6WordsHelper_core.OnRunning.ChallengeMode.*;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
 
@@ -30,7 +30,14 @@ public class OnRunning
                     }
                 })
                 .addItem("中译英挑战", () -> {
-
+                    menuWindow.setVisible(false);
+                    try
+                    {
+                        ShowMode2(gui, menuWindow);
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                 })
                 .addItem("单词记忆情况", () -> {
 
@@ -56,6 +63,7 @@ public class OnRunning
         gui.updateScreen();
     }
 
+    //英译中挑战
     public static void ShowMode1(MultiWindowTextGUI gui, BasicWindow menuWindow) throws IOException, RuntimeException
     {
         BasicWindow thisWindow = new BasicWindow("英译中挑战");
@@ -64,19 +72,46 @@ public class OnRunning
         Panel panel = new Panel();
         panel.setLayoutManager(new GridLayout(1));
 
-        Label countdownLabel = new Label("████████████████████  300s");
-        panel.addComponent(countdownLabel);
-        Label wordLabel = new Label("");
-        panel.addComponent(wordLabel);
-        panel.addComponent(new Label("在下列选项中选出与该单词对应的译义"));
-        ActionListBox selections = new ActionListBox(new TerminalSize(30, 4));
-        panel.addComponent(selections);
+        panel.addComponent(0, new Label("████████████████████  300s"));  //countdownLabel
+        panel.addComponent(1, new Label(""));   //wordLabel
+        panel.addComponent(2, new Label("在下列选项中选出与该单词对应的译义"));  //tipLabel
+        panel.addComponent(3, new ActionListBox(new TerminalSize(30, 4)));  //transSelections
+        panel.addComponent(4, new Label("██████████████████████████████████")); //correctAnswer
         thisWindow.setComponent(panel);
 
-        RunMode1.func Mode1func = new RunMode1.func(thisWindow, wordLabel, selections, menuWindow);
+        RunMode1 Mode1func = new RunMode1(thisWindow, menuWindow, panel);
         Thread func = new Thread(Mode1func);
+        Thread counter = new Thread(new CountDown(panel, Mode1func, 300));
         func.start();
-        Thread counter = new Thread(new RunMode1.Countdown(countdownLabel, Mode1func));
+        counter.start();
+
+        gui.addWindowAndWait(thisWindow);
+        if (gui.getWindows().contains(thisWindow))
+            gui.setActiveWindow(thisWindow);
+        gui.updateScreen();
+    }
+
+    //中译英挑战
+    public static void ShowMode2(MultiWindowTextGUI gui, BasicWindow menuWindow) throws IOException, RuntimeException
+    {
+        BasicWindow thisWindow = new BasicWindow("中译英挑战");
+        thisWindow.setHints(List.of(Window.Hint.CENTERED));
+
+        Panel panel = new Panel();
+        panel.setLayoutManager(new GridLayout(1));
+
+        panel.addComponent(0, new Label("████████████████████  600s"));  //countdownLabel
+        panel.addComponent(1, new Label(""));   //wordLabel
+        panel.addComponent(2, new Label(""));   //wordTipLabel
+        panel.addComponent(2, new Label("根据提示在下面拼写该单词"));  //tipLabel
+        panel.addComponent(3, new TextBox(new TerminalSize(30, 1)).setText(""));  //transSelections
+
+        thisWindow.setComponent(panel);
+
+        RunMode2 Mode2func = new RunMode2(thisWindow, menuWindow, panel);
+        Thread func = new Thread(Mode2func);
+        Thread counter = new Thread(new CountDown(panel, Mode2func, 600));
+        func.start();
         counter.start();
 
         gui.addWindowAndWait(thisWindow);
