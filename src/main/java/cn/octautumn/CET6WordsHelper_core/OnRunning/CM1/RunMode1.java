@@ -197,6 +197,15 @@ public class RunMode1
                     }
                 }
             }
+            Countdown.Running = false;
+            wordLabel.setText("太棒了，你一共答对了" + (20 - errorCount) + "题");
+            transSelections.clearItems();
+            transSelections.addItem("选择以退出", () -> {
+                thisWindow.close();
+                menuWindow.setVisible(true);
+                Main.MultiWindowGUI.setActiveWindow(menuWindow);
+                Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
+            });
         }
     }
 }

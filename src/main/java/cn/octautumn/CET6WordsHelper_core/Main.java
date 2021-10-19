@@ -21,7 +21,9 @@ public class Main
 
     public static void main(String[] args) throws IOException
     {
-        terminal = new DefaultTerminalFactory().createTerminal();
+        terminal = new DefaultTerminalFactory()
+                .setTerminalEmulatorTitle("CET6 单词助手")
+                .createTerminal();
 
         //新建屏幕并启动
         screen = new TerminalScreen(terminal);
@@ -31,7 +33,5 @@ public class Main
 
         OnLoad.onLoad(MultiWindowGUI);
         OnRunning.ShowMenu(MultiWindowGUI);
-
-
     }
 }

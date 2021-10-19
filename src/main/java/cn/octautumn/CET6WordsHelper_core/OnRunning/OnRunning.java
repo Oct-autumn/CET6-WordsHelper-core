@@ -40,6 +40,8 @@ public class OnRunning
                     try
                     {
                         Main.screen.close();
+                        Main.terminal.close();
+                        System.exit(0);
                     } catch (IOException e)
                     {
                         e.printStackTrace();
