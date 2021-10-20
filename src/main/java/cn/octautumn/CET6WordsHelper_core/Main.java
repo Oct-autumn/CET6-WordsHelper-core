@@ -6,6 +6,7 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.screen.*;
 import com.googlecode.lanterna.terminal.*;
+import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
 
 import java.io.IOException;
 

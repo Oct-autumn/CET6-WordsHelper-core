@@ -9,6 +9,7 @@ import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.Panel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -49,6 +50,10 @@ public class RunMode1 extends RunMode
                 }
 
                 wordLabel.setText(selWord.get(0).getEnS());
+                String correctAnswer = "N/A";
+                tipLabel.setText("");
+                tipLabel.setForegroundColor(TextColor.ANSI.BLACK)
+                        .setText("请在下列选项中选出与该单词对应的译义： ");
                 transSelections.clearItems();
 
                 boolean[] isIn = {false, false, false, false};
@@ -65,7 +70,8 @@ public class RunMode1 extends RunMode
                     String mean = chTrans.getMean().get(meanId);
                     if (randID == 0)
                     {
-                        transSelections.addItem(chTrans.getPos() + ". " + mean, () -> {
+                        correctAnswer = chTrans.getPos() + ". " + mean;
+                        transSelections.addItem(correctAnswer, () -> {
                             synchronized (this)
                             {
                                 isCorrect.set(true);
@@ -104,18 +110,21 @@ public class RunMode1 extends RunMode
                 }
                 if (Status == 2)
                 {
-                    wordLabel.setText("超时啦! 再接再厉吧.");
-                    wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+                    wordLabel.setForegroundColor(TextColor.ANSI.RED)
+                            .setText("超时啦! 再接再厉吧. ");
+                    tipLabel.setText("");
                     showExitChoice();
                     return;
                 }
 
                 if (isCorrect.get())
                 {
-                    wordLabel.setText("恭喜你，回答正确.你已答对" + (wordCount - errorCount + 1) + "题");
+                    tipLabel.setText("");
+                    tipLabel.setForegroundColor(TextColor.ANSI.GREEN)
+                            .setText("恭喜你，回答正确. 你已答对" + (wordCount - errorCount + 1) + "题 ");
                     try
                     {
-
+                        transSelections.clearItems();
                         Thread.sleep(1000);
                     } catch (InterruptedException e)
                     {
@@ -125,33 +134,39 @@ public class RunMode1 extends RunMode
                 else
                 {
                     errorCount++;
-                    wordLabel.setText("对不起，回答错误. 你已答错" + errorCount + "题");
+                    tipLabel.setText("");
+                    tipLabel.setForegroundColor(TextColor.ANSI.RED)
+                            .setText("对不起，回答错误. 你已答错" + errorCount + "题 \n" +
+                                    "正确答案是：" + correctAnswer + " ");
+                    transSelections.clearItems();
                     try
                     {
-                        Thread.sleep(1000);
+                        if (errorCount == 2)
+                        {
+                            Status = 3;
+                            Thread.sleep(5000);
+                            wordLabel.setForegroundColor(TextColor.ANSI.RED)
+                                    .setText("错误太多啦! 再接再厉吧. ");
+                            tipLabel.setText("");
+                            showExitChoice();
+                            return;
+                        }
+                        Thread.sleep(5000);
                     } catch (InterruptedException e)
                     {
                         e.printStackTrace();
                     }
-                    if (errorCount == 2)
-                    {
-                        Status = 3;
-                        wordLabel.setText("错误太多啦! 再接再厉吧.");
-                        wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                        showExitChoice();
-                        return;
-                    }
                 }
             }
             Status = 4;
-            wordLabel.setText("太棒了，你一共答对了" + (20 - errorCount) + "题");
-            wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+            wordLabel.setForegroundColor(TextColor.ANSI.GREEN)
+                    .setText("太棒了，你一共答对了" + (20 - errorCount) + "题 ");
             showExitChoice();
         }
 
         private void showExitChoice()
         {
-            tipLabel.setText("                                  ");
+            tipLabel.setText("");
             transSelections.clearItems();
             transSelections.addItem("选择以退出", () -> {
                 thisWindow.close();

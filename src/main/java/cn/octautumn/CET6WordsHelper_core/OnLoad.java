@@ -28,7 +28,7 @@ public class OnLoad
         loadingPanel.addComponent(new Label("正在加载词汇..."));
         loadingPanel.addComponent(new EmptySpace());
 
-        Label processLabel = new Label("▒▒▒▒▒▒▒▒▒▒");
+        Label processLabel = new Label("━━━━━━━━━━");
         loadingPanel.addComponent(processLabel);
         Label wordCountLabel = new Label("");
         wordCountLabel.setText("0000/0000");
@@ -101,7 +101,7 @@ public class OnLoad
 
             int tmp_cal = (wordKey+1)*100 / wordSum;
             processLabel.setText("█".repeat(Math.max(0, tmp_cal / 10)) +
-                    "▒".repeat(Math.max(0, 10 - (tmp_cal / 10))));
+                    "━".repeat(Math.max(0, 10 - (tmp_cal / 10))));
 
             gui.updateScreen();
         }

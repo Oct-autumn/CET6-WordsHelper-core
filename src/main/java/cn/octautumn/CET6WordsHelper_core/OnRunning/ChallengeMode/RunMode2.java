@@ -4,10 +4,7 @@ import cn.octautumn.CET6WordsHelper_core.DictionaryClass.ChTrans;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
 import cn.octautumn.CET6WordsHelper_core.Main;
 import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.gui2.ActionListBox;
-import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.Panel;
+import com.googlecode.lanterna.gui2.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,8 +12,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RunMode2 extends RunMode
 {
     final Label wordLabel;
+    final Label wordTipLabel;
     final Label tipLabel;
-    final ActionListBox transSelections;
+    final TextBox answer;
     final BasicWindow thisWindow;
     final BasicWindow menuWindow;
 
@@ -24,14 +22,17 @@ public class RunMode2 extends RunMode
     {
         this.thisWindow = thisWindow;
         this.wordLabel = (Label) panel.getChildrenList().get(1);
-        this.tipLabel = (Label) panel.getChildrenList().get(2);
-        this.transSelections = (ActionListBox) panel.getChildrenList().get(3);
+        this.wordTipLabel = (Label) panel.getChildrenList().get(2);
+        this.tipLabel = (Label) panel.getChildrenList().get(3);
+        this.answer = (TextBox) panel.getChildrenList().get(4);
         this.menuWindow = menuWindow;
     }
 
     @Override
     public void run()
     {
+
+        /*
         AtomicBoolean isCorrect = new AtomicBoolean(false);
         int errorCount = 0;
         int wordSum = Main.dictionary.getWordCount();
@@ -49,10 +50,10 @@ public class RunMode2 extends RunMode
             }
 
             wordLabel.setText(selWord.get(0).getEnS());
-            transSelections.clearItems();
+            answer.clearItems();
 
             boolean[] isIn = {false, false, false, false};
-            for (int i = 0; transSelections.getItemCount() < 4; )
+            for (int i = 0; answer.getItemCount() < 4; )
             {
                 randID = getRandom(0, 3);
                 if (isIn[randID])
@@ -65,7 +66,7 @@ public class RunMode2 extends RunMode
                 String mean = chTrans.getMean().get(meanId);
                 if (randID == 0)
                 {
-                    transSelections.addItem(chTrans.getPos() + ". " + mean, () -> {
+                    answer.addItem(chTrans.getPos() + ". " + mean, () -> {
                         synchronized (this)
                         {
                             isCorrect.set(true);
@@ -76,7 +77,7 @@ public class RunMode2 extends RunMode
                 }
                 else
                 {
-                    transSelections.addItem(chTrans.getPos() + ". " + mean, () -> {
+                    answer.addItem(chTrans.getPos() + ". " + mean, () -> {
                         synchronized (this)
                         {
                             isCorrect.set(false);
@@ -86,7 +87,7 @@ public class RunMode2 extends RunMode
                     });
                 }
             }
-            transSelections.setSelectedIndex(0);
+            answer.setSelectedIndex(0);
 
             Status = 1;
             synchronized (this)
@@ -147,17 +148,20 @@ public class RunMode2 extends RunMode
         wordLabel.setText("太棒了，你一共答对了" + (20 - errorCount) + "题");
         wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
         showExitChoice();
+         */
     }
 
     private void showExitChoice()
     {
-        tipLabel.setText("                                  ");
-        transSelections.clearItems();
-        transSelections.addItem("选择以退出", () -> {
+        wordTipLabel.setText("");
+        /*
+        answer.clearItems();
+        answer.addItem("选择以退出", () -> {
             thisWindow.close();
             menuWindow.setVisible(true);
             Main.MultiWindowGUI.setActiveWindow(menuWindow);
             Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
         });
+         */
     }
 }

@@ -7,6 +7,7 @@ import com.googlecode.lanterna.gui2.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class OnRunning
 {
@@ -76,7 +77,13 @@ public class OnRunning
         panel.addComponent(1, new Label(""));   //wordLabel
         panel.addComponent(2, new Label("在下列选项中选出与该单词对应的译义"));  //tipLabel
         panel.addComponent(3, new ActionListBox(new TerminalSize(30, 4)));  //transSelections
-        panel.addComponent(4, new Label("██████████████████████████████████")); //correctAnswer
+        panel.addComponent(4, new Label("<-------------------------------------->"));
+        panel.addComponent(5, new Button("EXIT", () -> {
+            thisWindow.close();
+            menuWindow.setVisible(true);
+            Main.MultiWindowGUI.setActiveWindow(menuWindow);
+            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
+        }));
         thisWindow.setComponent(panel);
 
         RunMode1 Mode1func = new RunMode1(thisWindow, menuWindow, panel);
@@ -103,8 +110,18 @@ public class OnRunning
         panel.addComponent(0, new Label("████████████████████  600s"));  //countdownLabel
         panel.addComponent(1, new Label(""));   //wordLabel
         panel.addComponent(2, new Label(""));   //wordTipLabel
-        panel.addComponent(2, new Label("根据提示在下面拼写该单词"));  //tipLabel
-        panel.addComponent(3, new TextBox(new TerminalSize(30, 1)).setText(""));  //transSelections
+        panel.addComponent(3, new Label("根据提示在下面拼写该单词"));  //tipLabel
+        panel.addComponent(4, new TextBox(new TerminalSize(30, 1))
+                .setVerticalFocusSwitching(false)
+
+                .setText(""));  //transSelections
+        panel.addComponent(5, new Label("<-------------------------------------->"));
+        panel.addComponent(6, new Button("EXIT", () -> {
+            thisWindow.close();
+            menuWindow.setVisible(true);
+            Main.MultiWindowGUI.setActiveWindow(menuWindow);
+            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
+        }));
 
         thisWindow.setComponent(panel);
 

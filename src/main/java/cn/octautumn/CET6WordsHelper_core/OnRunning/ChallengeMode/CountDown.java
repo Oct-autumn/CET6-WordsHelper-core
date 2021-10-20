@@ -33,7 +33,7 @@ public class CountDown implements Runnable
             countTime--;
             int tmp_cal = (countTime) * 100 / totalTime;
             ((Label) panel.getChildrenList().get(0)).setText("█".repeat(Math.max(0, tmp_cal / 5)) +
-                    "▒".repeat(Math.max(0, 20 - (tmp_cal / 5))) + String.format("  %3ds", countTime));
+                    "━".repeat(Math.max(0, 20 - (tmp_cal / 5))) + String.format("  %3ds", countTime));
         }
 
         synchronized (func)
