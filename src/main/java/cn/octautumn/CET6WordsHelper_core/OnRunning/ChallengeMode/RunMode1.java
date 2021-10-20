@@ -9,7 +9,6 @@ import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Label;
 import com.googlecode.lanterna.gui2.Panel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -113,7 +112,8 @@ public class RunMode1 extends RunMode
                     wordLabel.setForegroundColor(TextColor.ANSI.RED)
                             .setText("超时啦! 再接再厉吧. ");
                     tipLabel.setText("");
-                    showExitChoice();
+                    tipLabel.setText("");
+                    transSelections.clearItems();
                     return;
                 }
 
@@ -148,7 +148,7 @@ public class RunMode1 extends RunMode
                             wordLabel.setForegroundColor(TextColor.ANSI.RED)
                                     .setText("错误太多啦! 再接再厉吧. ");
                             tipLabel.setText("");
-                            showExitChoice();
+                            transSelections.clearItems();
                             return;
                         }
                         Thread.sleep(5000);
@@ -161,18 +161,8 @@ public class RunMode1 extends RunMode
             Status = 4;
             wordLabel.setForegroundColor(TextColor.ANSI.GREEN)
                     .setText("太棒了，你一共答对了" + (20 - errorCount) + "题 ");
-            showExitChoice();
-        }
-
-        private void showExitChoice()
-        {
             tipLabel.setText("");
             transSelections.clearItems();
-            transSelections.addItem("选择以退出", () -> {
-                thisWindow.close();
-                menuWindow.setVisible(true);
-                Main.MultiWindowGUI.setActiveWindow(menuWindow);
-                Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
-            });
         }
+
 }

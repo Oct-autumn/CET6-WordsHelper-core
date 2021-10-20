@@ -18,6 +18,8 @@ public class RunMode2 extends RunMode
     final BasicWindow thisWindow;
     final BasicWindow menuWindow;
 
+    final RunMode2 thisClass;
+
     public RunMode2(BasicWindow thisWindow, BasicWindow menuWindow, Panel panel)
     {
         this.thisWindow = thisWindow;
@@ -26,68 +28,79 @@ public class RunMode2 extends RunMode
         this.tipLabel = (Label) panel.getChildrenList().get(3);
         this.answer = (TextBox) panel.getChildrenList().get(4);
         this.menuWindow = menuWindow;
+        thisClass = this;
     }
 
     @Override
     public void run()
     {
-
-        /*
         AtomicBoolean isCorrect = new AtomicBoolean(false);
         int errorCount = 0;
         int wordSum = Main.dictionary.getWordCount();
         for (int wordCount = 0; wordCount < 20; wordCount++)
         {
             int randID;
-            ArrayList<DictEntry> selWord = new ArrayList<>();
-            while (selWord.size() < 4)
+
+            randID = (int) (Math.random() * (wordSum));
+            DictEntry selWord = Main.dictionary.getData().get(randID);
+
+            String correctAnswer = selWord.getEnS();
+            tipLabel.setText("");
+            tipLabel.setForegroundColor(TextColor.ANSI.BLACK)
+                    .setText("根据提示在下面拼写该单词： ");
+
+            int tipSize;   //智能提示，减少单词过短时提示过多[Doge]
+            if (correctAnswer.length() < 3)
+                tipSize = 0;
+            else if (correctAnswer.length() < 6)
+                tipSize = 1;
+            else
+                tipSize = getRandom(1,2);
+
+            char[] tipWord = "*".repeat(correctAnswer.length()).toCharArray();
+
+            for (int i = 0; i < tipSize; i++)
             {
-                randID = (int) (Math.random() * (wordSum));
-                if (!selWord.contains(Main.dictionary.getData().get(randID)))
+                while(true)
                 {
-                    selWord.add(Main.dictionary.getData().get(randID));
+                    randID = getRandom(0, correctAnswer.length() - 1);
+                    if (tipWord[randID] != '*')
+                        continue;
+                    tipWord[randID] = correctAnswer.charAt(randID);
+                    break;
                 }
             }
+            wordLabel.setText(String.valueOf(tipWord));
 
-            wordLabel.setText(selWord.get(0).getEnS());
-            answer.clearItems();
-
-            boolean[] isIn = {false, false, false, false};
-            for (int i = 0; answer.getItemCount() < 4; )
+            ArrayList<ChTrans> chTrans = selWord.getChS();
+            StringBuilder wordTipWord = new StringBuilder();
+            for (ChTrans it : chTrans)
             {
-                randID = getRandom(0, 3);
-                if (isIn[randID])
-                    continue;
-                int wordId = randID;
-                isIn[wordId] = true;
-                int chTransId = (int) (Math.random() * (selWord.get(wordId).getChS().size()));
-                ChTrans chTrans = selWord.get(wordId).getChS().get(chTransId);
-                int meanId = (int) (Math.random() * (chTrans.getMean().size()));
-                String mean = chTrans.getMean().get(meanId);
-                if (randID == 0)
+                wordTipWord.append(it.getPos()).append(' ');
+                ArrayList<String> mean = it.getMean();
+                for (int i = 0 ; i < mean.size() - 2; i++)
                 {
-                    answer.addItem(chTrans.getPos() + ". " + mean, () -> {
-                        synchronized (this)
-                        {
-                            isCorrect.set(true);
-                            Status = 0;
-                            this.notify();
-                        }
-                    });
+                    wordTipWord.append(mean.get(i)).append(',');
                 }
-                else
-                {
-                    answer.addItem(chTrans.getPos() + ". " + mean, () -> {
-                        synchronized (this)
-                        {
-                            isCorrect.set(false);
-                            Status = 0;
-                            this.notify();
-                        }
-                    });
-                }
+                wordTipWord.append(mean.get(mean.size() - 1)).append(';');
+                wordTipWord.append('\n');
             }
-            answer.setSelectedIndex(0);
+            wordTipLabel.setText("");
+            wordTipLabel.setText(wordTipWord.toString());
+
+            answer.setTextChangeListener((s, b) -> {
+                System.out.println(s);
+                if (s.endsWith("\n"))
+                {
+                    synchronized (this)
+                    {
+                        String answer = s.substring(0, s.length()-1);
+                        isCorrect.set(answer.equals(correctAnswer));
+                        Status = 0;
+                        this.notify();
+                    }
+                }
+            });
 
             Status = 1;
             synchronized (this)
@@ -105,28 +118,33 @@ public class RunMode2 extends RunMode
             }
             if (Status == 2)
             {
-                wordLabel.setText("超时啦! 再接再厉吧.");
-                wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                showExitChoice();
+                wordLabel.setForegroundColor(TextColor.ANSI.RED)
+                        .setText("超时啦! 再接再厉吧. ");
+                answer.setEnabled(false).setText("");
+                wordTipLabel.setText("");
                 return;
             }
 
             if (isCorrect.get())
             {
-                wordLabel.setText("恭喜你，回答正确.你已答对" + (wordCount - errorCount + 1) + "题");
+                tipLabel.setText("");
+                tipLabel.setForegroundColor(TextColor.ANSI.GREEN)
+                        .setText("恭喜你，回答正确. 你已答对" + (wordCount - errorCount + 1) + "题 ");
                 try
                 {
-
+                    answer.setText("");
                     Thread.sleep(1000);
                 } catch (InterruptedException e)
                 {
                     e.printStackTrace();
                 }
-            }
-            else
+            } else
             {
                 errorCount++;
-                wordLabel.setText("对不起，回答错误. 你已答错" + errorCount + "题");
+                tipLabel.setText("");
+                tipLabel.setForegroundColor(TextColor.ANSI.RED)
+                        .setText("对不起，回答错误. 你已答错" + errorCount + "题 \n" +
+                                "正确答案是：" + correctAnswer + " ");
                 try
                 {
                     Thread.sleep(1000);
@@ -139,29 +157,15 @@ public class RunMode2 extends RunMode
                     Status = 3;
                     wordLabel.setText("错误太多啦! 再接再厉吧.");
                     wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                    showExitChoice();
+                    wordTipLabel.setText("");
                     return;
                 }
             }
         }
         Status = 4;
-        wordLabel.setText("太棒了，你一共答对了" + (20 - errorCount) + "题");
+        wordLabel.setText("太棒了，你一共答对了" + (20 - errorCount) + "题 ");
         wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-        showExitChoice();
-         */
+        wordTipLabel.setText("");
     }
 
-    private void showExitChoice()
-    {
-        wordTipLabel.setText("");
-        /*
-        answer.clearItems();
-        answer.addItem("选择以退出", () -> {
-            thisWindow.close();
-            menuWindow.setVisible(true);
-            Main.MultiWindowGUI.setActiveWindow(menuWindow);
-            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
-        });
-         */
-    }
 }

@@ -110,11 +110,9 @@ public class OnRunning
         panel.addComponent(0, new Label("████████████████████  600s"));  //countdownLabel
         panel.addComponent(1, new Label(""));   //wordLabel
         panel.addComponent(2, new Label(""));   //wordTipLabel
-        panel.addComponent(3, new Label("根据提示在下面拼写该单词"));  //tipLabel
-        panel.addComponent(4, new TextBox(new TerminalSize(30, 1))
-                .setVerticalFocusSwitching(false)
-
-                .setText(""));  //transSelections
+        panel.addComponent(3, new Label("根据提示在下面拼写该单词："));  //tipLabel
+        panel.addComponent(4, new TextBox(new TerminalSize(30, 1), TextBox.Style.MULTI_LINE)
+                .setText(""));  //answer
         panel.addComponent(5, new Label("<-------------------------------------->"));
         panel.addComponent(6, new Button("EXIT", () -> {
             thisWindow.close();

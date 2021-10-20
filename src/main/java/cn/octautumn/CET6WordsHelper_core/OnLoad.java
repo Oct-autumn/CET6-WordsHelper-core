@@ -39,7 +39,7 @@ public class OnLoad
         gui.setActiveWindow(loadingWindow);
 
         //加载词库
-        final String JsonFilePath = WorkingDir + fileSeparator + "resources" + fileSeparator + "CET6-Words.json";
+        final String JsonFilePath = WorkingDir + fileSeparator + "CET6-Words.json";
         wordListJsonFile = new File(JsonFilePath);
         if (!wordListJsonFile.exists())
         {
