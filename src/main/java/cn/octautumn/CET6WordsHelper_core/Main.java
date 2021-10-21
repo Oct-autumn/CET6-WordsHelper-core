@@ -18,7 +18,8 @@ public class Main
     public static MultiWindowTextGUI MultiWindowGUI;
     public static final String fileSeparator = System.getProperty("file.separator");
     public static final String WorkingDir = System.getProperty("user.dir");
-    public static final Dictionary dictionary = new Dictionary();
+    public static final Dictionary mainDict = new Dictionary();
+    public static final Dictionary HistoryDict = new Dictionary();
 
     public static void main(String[] args) throws IOException
     {

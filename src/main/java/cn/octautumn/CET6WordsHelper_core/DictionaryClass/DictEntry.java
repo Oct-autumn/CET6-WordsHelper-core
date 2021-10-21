@@ -5,20 +5,20 @@ import java.util.ArrayList;
 public class DictEntry
 {
 
-    int id;
+    int familiar;
     String EnS;
     ArrayList<ChTrans> ChS;
 
     public DictEntry()
     {
-        id = 0;
+        familiar = 0;
         EnS = "";
         ChS = new ArrayList<>();
     }
 
-    public DictEntry setId(int id)
+    public DictEntry isFamiliar(int familiar)
     {
-        this.id = id;
+        this.familiar = familiar;
         return this;
     }
 
@@ -34,9 +34,9 @@ public class DictEntry
         return this;
     }
 
-    public int getId()
+    public int getFamiliar()
     {
-        return id;
+        return familiar;
     }
 
     public String getEnS()

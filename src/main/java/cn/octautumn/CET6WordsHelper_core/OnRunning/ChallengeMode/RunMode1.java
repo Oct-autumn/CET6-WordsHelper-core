@@ -34,7 +34,7 @@ public class RunMode1 extends RunMode
         {
             AtomicBoolean isCorrect = new AtomicBoolean(false);
             int errorCount = 0;
-            int wordSum = Main.dictionary.getWordCount();
+            int wordSum = Main.mainDict.getWordCount();
             for (int wordCount = 0; wordCount < 20; wordCount++)
             {
                 int randID;
@@ -42,9 +42,9 @@ public class RunMode1 extends RunMode
                 while (selWord.size() < 4)
                 {
                     randID = (int) (Math.random() * (wordSum));
-                    if (!selWord.contains(Main.dictionary.getData().get(randID)))
+                    if (!selWord.contains(Main.mainDict.getData().get(randID)))
                     {
-                        selWord.add(Main.dictionary.getData().get(randID));
+                        selWord.add(Main.mainDict.getData().get(randID));
                     }
                 }
 
@@ -91,7 +91,7 @@ public class RunMode1 extends RunMode
                         });
                     }
                 }
-                transSelections.setSelectedIndex(0);
+                transSelections.setSelectedIndex(0).takeFocus();
 
                 Status = 1;
                 synchronized (this)

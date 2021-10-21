@@ -13,6 +13,7 @@ public class OnRunning
 {
     public static void ShowMenu(MultiWindowTextGUI gui) throws IOException, RuntimeException
     {
+
         BasicWindow menuWindow = new BasicWindow("菜单");
         menuWindow.setHints(List.of(Window.Hint.CENTERED));
 
@@ -41,9 +42,21 @@ public class OnRunning
                     }
                 })
                 .addItem("单词记忆情况", () -> {
-
+                    menuWindow.setVisible(false);
+                    try
+                    {
+                        ShowHistory(gui, menuWindow);
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                 })
-                .addItem("",()->{})
+                .addItem("", () -> {
+                })
+                .addItem("词库操作", () -> {
+                })
+                .addItem("", () -> {
+                })
                 .addItem("退出", () -> {
                     try
                     {
@@ -133,5 +146,10 @@ public class OnRunning
         if (gui.getWindows().contains(thisWindow))
             gui.setActiveWindow(thisWindow);
         gui.updateScreen();
+    }
+
+    public static void ShowHistory(MultiWindowTextGUI gui, BasicWindow menuWindow) throws IOException, RuntimeException
+    {
+
     }
 }

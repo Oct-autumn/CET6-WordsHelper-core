@@ -70,7 +70,7 @@ public class OnLoad
         ObjectMapper mapper = new ObjectMapper();
         JsonNode WordListJson = mapper.readTree(wordListJsonFile);
         int wordSum = WordListJson.get("count").asInt();
-        dictionary.setWordCount(wordSum);
+        mainDict.setWordCount(wordSum);
         int wordKey = 0;
 
         for (Iterator<JsonNode> it = WordListJson.get("data").iterator(); it.hasNext(); wordKey++)
@@ -78,7 +78,7 @@ public class OnLoad
             JsonNode NowEntry = it.next();
             DictEntry newEntry = new DictEntry();
 
-            newEntry.setId(NowEntry.get("id").asInt()).
+            newEntry.isFamiliar(NowEntry.get("familiar").asInt()).
                     setEnS(NowEntry.get("enS").asText());
 
             for (JsonNode NowChTrans : NowEntry.get("chS"))
@@ -96,8 +96,8 @@ public class OnLoad
                 newEntry.addChS(newChTrans);
             }
 
-            dictionary.addEntry(wordKey, newEntry);
-            wordCountLabel.setText(String.format("%04d/%04d",wordKey + 1,wordSum));
+            mainDict.addEntry(wordKey, newEntry);
+            wordCountLabel.setText(String.format("%04d/%04d", wordKey + 1, wordSum));
 
             int tmp_cal = (wordKey+1)*100 / wordSum;
             processLabel.setText("█".repeat(Math.max(0, tmp_cal / 10)) +

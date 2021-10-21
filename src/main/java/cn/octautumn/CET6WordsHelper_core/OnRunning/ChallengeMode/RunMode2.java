@@ -17,7 +17,6 @@ public class RunMode2 extends RunMode
     final TextBox answer;
     final BasicWindow thisWindow;
     final BasicWindow menuWindow;
-
     final RunMode2 thisClass;
 
     public RunMode2(BasicWindow thisWindow, BasicWindow menuWindow, Panel panel)
@@ -36,18 +35,20 @@ public class RunMode2 extends RunMode
     {
         AtomicBoolean isCorrect = new AtomicBoolean(false);
         int errorCount = 0;
-        int wordSum = Main.dictionary.getWordCount();
+        int wordSum = Main.mainDict.getWordCount();
         for (int wordCount = 0; wordCount < 20; wordCount++)
         {
             int randID;
 
             randID = (int) (Math.random() * (wordSum));
-            DictEntry selWord = Main.dictionary.getData().get(randID);
+            DictEntry selWord = Main.mainDict.getData().get(randID);
 
             String correctAnswer = selWord.getEnS();
+            System.out.println(correctAnswer);
             tipLabel.setText("");
             tipLabel.setForegroundColor(TextColor.ANSI.BLACK)
                     .setText("根据提示在下面拼写该单词： ");
+            answer.setText("").takeFocus();
 
             int tipSize;   //智能提示，减少单词过短时提示过多[Doge]
             if (correctAnswer.length() < 3)
@@ -89,13 +90,14 @@ public class RunMode2 extends RunMode
             wordTipLabel.setText(wordTipWord.toString());
 
             answer.setTextChangeListener((s, b) -> {
-                System.out.println(s);
                 if (s.endsWith("\n"))
                 {
                     synchronized (this)
                     {
-                        String answer = s.substring(0, s.length()-1);
-                        isCorrect.set(answer.equals(correctAnswer));
+                        String nowAnswer = s.substring(0, s.length() - 1);
+                        answer.setText(nowAnswer);
+                        answer.setEnabled(false);
+                        isCorrect.set(nowAnswer.equalsIgnoreCase(correctAnswer));
                         Status = 0;
                         this.notify();
                     }
@@ -121,6 +123,7 @@ public class RunMode2 extends RunMode
                 wordLabel.setForegroundColor(TextColor.ANSI.RED)
                         .setText("超时啦! 再接再厉吧. ");
                 answer.setEnabled(false).setText("");
+                tipLabel.setText("");
                 wordTipLabel.setText("");
                 return;
             }
@@ -134,6 +137,7 @@ public class RunMode2 extends RunMode
                 {
                     answer.setText("");
                     Thread.sleep(1000);
+                    answer.setEnabled(true);
                 } catch (InterruptedException e)
                 {
                     e.printStackTrace();
@@ -147,25 +151,30 @@ public class RunMode2 extends RunMode
                                 "正确答案是：" + correctAnswer + " ");
                 try
                 {
-                    Thread.sleep(1000);
+                    if (errorCount == 2)
+                    {
+                        Status = 3;
+                        Thread.sleep(5000);
+                        wordLabel.setForegroundColor(TextColor.ANSI.RED)
+                                .setText("错误太多啦! 再接再厉吧.");
+                        answer.setText("");
+                        tipLabel.setText("");
+                        wordTipLabel.setText("");
+                        return;
+                    }
+                    Thread.sleep(5000);
+                    answer.setEnabled(true);
                 } catch (InterruptedException e)
                 {
                     e.printStackTrace();
                 }
-                if (errorCount == 2)
-                {
-                    Status = 3;
-                    wordLabel.setText("错误太多啦! 再接再厉吧.");
-                    wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
-                    wordTipLabel.setText("");
-                    return;
-                }
             }
         }
         Status = 4;
-        wordLabel.setText("太棒了，你一共答对了" + (20 - errorCount) + "题 ");
-        wordLabel.setForegroundColor(TextColor.ANSI.RED_BRIGHT);
+        wordLabel.setForegroundColor(TextColor.ANSI.GREEN)
+                .setText("太棒了，你一共答对了" + (20 - errorCount) + "题 ");
+        answer.setEnabled(false).setText("");
         wordTipLabel.setText("");
+        tipLabel.setText("");
     }
-
 }
