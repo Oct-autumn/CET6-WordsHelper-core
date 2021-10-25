@@ -7,6 +7,7 @@ import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.screen.*;
 import com.googlecode.lanterna.terminal.*;
 import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 
 import java.io.IOException;
 
@@ -35,5 +36,9 @@ public class Main
 
         OnLoad.onLoad(MultiWindowGUI);
         OnRunning.ShowMenu(MultiWindowGUI);
+
+
+
+        screen.close();
     }
 }

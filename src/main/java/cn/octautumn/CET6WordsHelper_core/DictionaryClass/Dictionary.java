@@ -4,48 +4,48 @@ import java.util.HashMap;
 
 public class Dictionary
 {
-    private String Verify;
-    private int wordCount;
-    private HashMap<Integer, DictEntry> DATA;
+    String verify;
+    int count;
+    HashMap<Integer, DictEntry> data;
 
     public Dictionary()
     {
-        Verify = "";
-        DATA = new HashMap<>();
+        verify = "";
+        data = new HashMap<>();
+    }
+
+    public void setCount(int count)
+    {
+        this.count = count;
     }
 
     public void setVerify(String verify)
     {
-        Verify = verify;
+        this.verify = verify;
     }
 
-    public void setDATA(HashMap<Integer, DictEntry> data)
+    public void setData(HashMap<Integer, DictEntry> data)
     {
-        this.DATA = data;
+        this.data = data;
     }
 
-    public void setWordCount(int wordCount)
+    public void addEntry(int id, DictEntry entry)
     {
-        this.wordCount = wordCount;
-    }
-
-    public void addEntry(int key, DictEntry entry)
-    {
-        DATA.put(key, entry);
-    }
-
-    public HashMap<Integer, DictEntry> getData()
-    {
-        return DATA;
-    }
-
-    public int getWordCount()
-    {
-        return wordCount;
+        data.put(id, entry);
     }
 
     public String getVerify()
     {
-        return Verify;
+        return verify;
+    }
+
+    public int getCount()
+    {
+        return count;
+    }
+
+    public HashMap<Integer, DictEntry> getData()
+    {
+        return data;
     }
 }

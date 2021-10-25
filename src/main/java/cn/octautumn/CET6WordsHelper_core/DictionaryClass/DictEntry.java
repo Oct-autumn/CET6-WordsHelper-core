@@ -6,17 +6,17 @@ public class DictEntry
 {
 
     int familiar;
-    String EnS;
-    ArrayList<ChTrans> ChS;
+    String enS;
+    ArrayList<ChTrans> chS;
 
     public DictEntry()
     {
         familiar = 0;
-        EnS = "";
-        ChS = new ArrayList<>();
+        enS = "";
+        chS = new ArrayList<>();
     }
 
-    public DictEntry isFamiliar(int familiar)
+    public DictEntry setFamiliar(int familiar)
     {
         this.familiar = familiar;
         return this;
@@ -24,13 +24,13 @@ public class DictEntry
 
     public DictEntry setEnS(String enS)
     {
-        EnS = enS;
+        this.enS = enS;
         return this;
     }
 
     public DictEntry addChS(ChTrans chS)
     {
-        ChS.add(chS);
+        this.chS.add(chS);
         return this;
     }
 
@@ -41,11 +41,11 @@ public class DictEntry
 
     public String getEnS()
     {
-        return EnS;
+        return enS;
     }
 
     public ArrayList<ChTrans> getChS()
     {
-        return ChS;
+        return chS;
     }
 }

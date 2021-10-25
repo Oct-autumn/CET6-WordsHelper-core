@@ -34,7 +34,7 @@ public class RunMode1 extends RunMode
         {
             AtomicBoolean isCorrect = new AtomicBoolean(false);
             int errorCount = 0;
-            int wordSum = Main.mainDict.getWordCount();
+            int wordSum = Main.mainDict.getCount();
             for (int wordCount = 0; wordCount < 20; wordCount++)
             {
                 int randID;
