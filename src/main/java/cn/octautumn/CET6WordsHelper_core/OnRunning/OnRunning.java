@@ -57,23 +57,14 @@ public class OnRunning
                 })
                 .addItem("", () -> {
                 })
-                .addItem("退出", () -> {
-                    try
-                    {
-                        Main.screen.close();
-                        Main.terminal.close();
-                        System.exit(0);
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                });
+                .addItem("退出", menuWindow::close);
         panel.addComponent(menu);
 
         menuWindow.setComponent(panel);
 
         gui.addWindowAndWait(menuWindow);
-        gui.setActiveWindow(menuWindow);
+        if (gui.getWindows().contains(menuWindow))
+            gui.setActiveWindow(menuWindow);
         gui.updateScreen();
     }
 

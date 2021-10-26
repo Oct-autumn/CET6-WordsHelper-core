@@ -4,19 +4,18 @@ import java.util.ArrayList;
 
 public class DictEntry
 {
-
-    int familiar;
+    Familiar familiar;   //三位二进制 从高位到低位分别代表——是否在模式二中通过 是否在模式一中通过 是否熟悉； 0即没出现过，1即熟悉，2即仅在模式一中通过
     String enS;
     ArrayList<ChTrans> chS;
 
     public DictEntry()
     {
-        familiar = 0;
+        familiar = Familiar.haveNotAppeared;
         enS = "";
         chS = new ArrayList<>();
     }
 
-    public DictEntry setFamiliar(int familiar)
+    public DictEntry setFamiliar(Familiar familiar)
     {
         this.familiar = familiar;
         return this;
@@ -34,7 +33,7 @@ public class DictEntry
         return this;
     }
 
-    public int getFamiliar()
+    public Familiar getFamiliar()
     {
         return familiar;
     }

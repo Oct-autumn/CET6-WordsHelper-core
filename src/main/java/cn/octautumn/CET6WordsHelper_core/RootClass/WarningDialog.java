@@ -13,7 +13,7 @@ public abstract class WarningDialog extends DialogWindow
         YES, CANCEL
     }
 
-    Options option = Options.YES;
+    protected Options option = Options.YES;
 
     protected WarningDialog(String title, String msg, Options... enabledButton)
     {

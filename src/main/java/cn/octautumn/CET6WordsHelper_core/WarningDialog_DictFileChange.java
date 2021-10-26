@@ -10,8 +10,6 @@ import java.util.List;
 //警告
 public class WarningDialog_DictFileChange extends WarningDialog
 {
-    InputStream inputStream;
-
     public WarningDialog_DictFileChange(String title, String msg)
     {
         super(title, msg, Options.YES, Options.CANCEL);
@@ -20,37 +18,19 @@ public class WarningDialog_DictFileChange extends WarningDialog
     @Override
     protected void YesOption()
     {
-        File input;
-        try
-        {
-            input = new FileDialogBuilder()
-                    .setTitle("打开词库文件")
-                    .setDescription("选择一个CET6-Words.json")
-                    .setActionLabel("Open")
-                    .build()
-                    .showDialog(getTextGUI());
-            if (input != null && input.exists())
-            {
-                WarningDialog_DictFileChange.this.close();
-                inputStream = new FileInputStream(input);
-            }
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
+        this.option = Options.YES;
+        WarningDialog_DictFileChange.this.close();
     }
 
     @Override
     protected void NoOption()
     {
-        InputStream inputStream = Main.class.getResourceAsStream("/CET6-Words.json");
-        assert inputStream != null;
-        this.inputStream = inputStream;
-        this.close();
+        this.option = Options.CANCEL;
+        WarningDialog_DictFileChange.this.close();
     }
 
-    public InputStream getInputStream()
+    public Options getInputStream()
     {
-        return inputStream;
+        return this.option;
     }
 }

@@ -33,11 +33,12 @@ public class Main
         screen.startScreen();
         // 创建GUI模块并启动
         MultiWindowGUI = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE_BRIGHT));
+        screen.refresh();
 
         OnLoad.onLoad(MultiWindowGUI);
         OnRunning.ShowMenu(MultiWindowGUI);
 
-
+        OnQuit.onQuit(MultiWindowGUI);
 
         screen.close();
     }

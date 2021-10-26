@@ -2,6 +2,7 @@ package cn.octautumn.CET6WordsHelper_core.OnRunning.ChallengeMode;
 
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.ChTrans;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
+import cn.octautumn.CET6WordsHelper_core.DictionaryClass.Familiar;
 import cn.octautumn.CET6WordsHelper_core.Main;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
@@ -36,44 +37,52 @@ public class RunMode2 extends RunMode
         AtomicBoolean isCorrect = new AtomicBoolean(false);
         int errorCount = 0;
         int wordSum = Main.mainDict.getCount();
+        int selWordId = -1;
+
         for (int wordCount = 0; wordCount < 20; wordCount++)
         {
             int randID;
+            DictEntry correctAnswer = new DictEntry();
+            do
+            {
+                randID = (int) (Math.random() * (wordSum));
+                correctAnswer = Main.mainDict.getData().get(randID);
+            } while (correctAnswer.getFamiliar().equals(Familiar.familiar));
+            selWordId = randID;
 
-            randID = (int) (Math.random() * (wordSum));
-            DictEntry selWord = Main.mainDict.getData().get(randID);
-
-            String correctAnswer = selWord.getEnS();
-            System.out.println(correctAnswer);
+            String correctSpell = correctAnswer.getEnS();
+            System.out.println(correctSpell);
             tipLabel.setText("");
             tipLabel.setForegroundColor(TextColor.ANSI.BLACK)
                     .setText("根据提示在下面拼写该单词： ");
             answer.setText("").takeFocus();
 
             int tipSize;   //智能提示，减少单词过短时提示过多[Doge]
-            if (correctAnswer.length() < 3)
+            if (correctAnswer.getFamiliar().equals(Familiar.notFamiliar)
+                    || correctAnswer.getFamiliar().equals(Familiar.passInMode1)
+                    || correctSpell.length() < 3)
                 tipSize = 0;
-            else if (correctAnswer.length() < 6)
+            else if (correctSpell.length() < 6)
                 tipSize = 1;
             else
-                tipSize = getRandom(1,2);
+                tipSize = getRandom(1, 2);
 
-            char[] tipWord = "*".repeat(correctAnswer.length()).toCharArray();
+            char[] tipWord = "*".repeat(correctSpell.length()).toCharArray();
 
             for (int i = 0; i < tipSize; i++)
             {
                 while(true)
                 {
-                    randID = getRandom(0, correctAnswer.length() - 1);
+                    randID = getRandom(0, correctSpell.length() - 1);
                     if (tipWord[randID] != '*')
                         continue;
-                    tipWord[randID] = correctAnswer.charAt(randID);
+                    tipWord[randID] = correctSpell.charAt(randID);
                     break;
                 }
             }
             wordLabel.setText(String.valueOf(tipWord));
 
-            ArrayList<ChTrans> chTrans = selWord.getChS();
+            ArrayList<ChTrans> chTrans = correctAnswer.getChS();
             StringBuilder wordTipWord = new StringBuilder();
             for (ChTrans it : chTrans)
             {
@@ -97,7 +106,7 @@ public class RunMode2 extends RunMode
                         String nowAnswer = s.substring(0, s.length() - 1);
                         answer.setText(nowAnswer);
                         answer.setEnabled(false);
-                        isCorrect.set(nowAnswer.equalsIgnoreCase(correctAnswer));
+                        isCorrect.set(nowAnswer.equalsIgnoreCase(correctSpell));
                         Status = 0;
                         this.notify();
                     }
@@ -133,6 +142,12 @@ public class RunMode2 extends RunMode
                 tipLabel.setText("");
                 tipLabel.setForegroundColor(TextColor.ANSI.GREEN)
                         .setText("恭喜你，回答正确. 你已答对" + (wordCount - errorCount + 1) + "题 ");
+                switch (Main.mainDict.getData().get(selWordId).getFamiliar())
+                {
+                    case haveNotAppeared, notFamiliar -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.passInMode2);
+                    case passInMode1 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.familiar);
+                }
+
                 try
                 {
                     answer.setText("");
@@ -148,7 +163,12 @@ public class RunMode2 extends RunMode
                 tipLabel.setText("");
                 tipLabel.setForegroundColor(TextColor.ANSI.RED)
                         .setText("对不起，回答错误. 你已答错" + errorCount + "题 \n" +
-                                "正确答案是：" + correctAnswer + " ");
+                                "正确答案是：" + correctSpell + " ");
+                switch (Main.mainDict.getData().get(selWordId).getFamiliar())
+                {
+                    case haveNotAppeared, passInMode2 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.notFamiliar);
+                }
+
                 try
                 {
                     if (errorCount == 2)

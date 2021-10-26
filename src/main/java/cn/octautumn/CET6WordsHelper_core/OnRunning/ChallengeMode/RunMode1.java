@@ -1,6 +1,7 @@
 package cn.octautumn.CET6WordsHelper_core.OnRunning.ChallengeMode;
 
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.ChTrans;
+import cn.octautumn.CET6WordsHelper_core.DictionaryClass.Familiar;
 import cn.octautumn.CET6WordsHelper_core.Main;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
 import com.googlecode.lanterna.TextColor;
@@ -35,6 +36,9 @@ public class RunMode1 extends RunMode
             AtomicBoolean isCorrect = new AtomicBoolean(false);
             int errorCount = 0;
             int wordSum = Main.mainDict.getCount();
+            int selWordId = -1;
+            String correctMeaning = "";
+
             for (int wordCount = 0; wordCount < 20; wordCount++)
             {
                 int randID;
@@ -42,21 +46,29 @@ public class RunMode1 extends RunMode
                 while (selWord.size() < 4)
                 {
                     randID = (int) (Math.random() * (wordSum));
-                    if (!selWord.contains(Main.mainDict.getData().get(randID)))
+                    if (!Main.mainDict.getData().get(randID).getFamiliar().equals(Familiar.familiar)
+                            && !selWord.contains(Main.mainDict.getData().get(randID)))
                     {
-                        selWord.add(Main.mainDict.getData().get(randID));
+                        if (selWord.isEmpty())
+                        {
+                            selWordId = randID;
+                            selWord.add(Main.mainDict.getData().get(randID));
+                            wordLabel.setText(Main.mainDict.getData().get(randID).getEnS());
+                        }
+                        else
+                        {
+                            selWord.add(Main.mainDict.getData().get(randID));
+                        }
                     }
                 }
 
-                wordLabel.setText(selWord.get(0).getEnS());
-                String correctAnswer = "N/A";
                 tipLabel.setText("");
                 tipLabel.setForegroundColor(TextColor.ANSI.BLACK)
                         .setText("请在下列选项中选出与该单词对应的译义： ");
                 transSelections.clearItems();
 
                 boolean[] isIn = {false, false, false, false};
-                for (int i = 0; transSelections.getItemCount() < 4; )
+                while (transSelections.getItemCount() < 4)
                 {
                     randID = getRandom(0, 3);
                     if (isIn[randID])
@@ -69,8 +81,8 @@ public class RunMode1 extends RunMode
                     String mean = chTrans.getMean().get(meanId);
                     if (randID == 0)
                     {
-                        correctAnswer = chTrans.getPos() + ". " + mean;
-                        transSelections.addItem(correctAnswer, () -> {
+                        correctMeaning = chTrans.getPos() + ". " + mean;
+                        transSelections.addItem(correctMeaning, () -> {
                             synchronized (this)
                             {
                                 isCorrect.set(true);
@@ -122,6 +134,12 @@ public class RunMode1 extends RunMode
                     tipLabel.setText("");
                     tipLabel.setForegroundColor(TextColor.ANSI.GREEN)
                             .setText("恭喜你，回答正确. 你已答对" + (wordCount - errorCount + 1) + "题 ");
+                    switch (Main.mainDict.getData().get(selWordId).getFamiliar())
+                    {
+                        case haveNotAppeared, notFamiliar -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.passInMode1);
+                        case passInMode2 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.familiar);
+                    }
+
                     try
                     {
                         transSelections.clearItems();
@@ -137,7 +155,12 @@ public class RunMode1 extends RunMode
                     tipLabel.setText("");
                     tipLabel.setForegroundColor(TextColor.ANSI.RED)
                             .setText("对不起，回答错误. 你已答错" + errorCount + "题 \n" +
-                                    "正确答案是：" + correctAnswer + " ");
+                                    "正确答案是：" + correctMeaning + " ");
+                    switch (Main.mainDict.getData().get(selWordId).getFamiliar())
+                    {
+                        case haveNotAppeared, passInMode1 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.notFamiliar);
+                    }
+
                     transSelections.clearItems();
                     try
                     {

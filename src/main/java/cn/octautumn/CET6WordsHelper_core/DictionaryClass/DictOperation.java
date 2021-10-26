@@ -14,46 +14,25 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
+import static cn.octautumn.CET6WordsHelper_core.Main.main;
 import static cn.octautumn.CET6WordsHelper_core.Main.mainDict;
 
 public class DictOperation
 {
-    public static void readDictionary(InputStream input) throws IOException
+    public static void ConstructDictionary(JsonNode input)
     {
-        // 创建一个窗口来装载面板
-        BasicWindow loadingWindow = new BasicWindow("加载中");
-        loadingWindow.setHints(List.of(Window.Hint.CENTERED));
-        // 创建一个面板来装载组件
-        Panel loadingPanel = new Panel();
-        loadingPanel.setLayoutManager(new GridLayout(2));
-
-        loadingPanel.addComponent(new Label("正在加载词汇..."));
-        loadingPanel.addComponent(new EmptySpace());
-
-        Label processLabel = new Label("━━━━━━━━━━");
-        loadingPanel.addComponent(processLabel);
-        Label wordCountLabel = new Label("");
-        wordCountLabel.setText("0000/0000");
-        loadingPanel.addComponent(wordCountLabel);
-
-        loadingWindow.setComponent(loadingPanel);
-        Main.MultiWindowGUI.addWindow(loadingWindow);
-        Main.MultiWindowGUI.setActiveWindow(loadingWindow);
-
         //构造词库数据结构
-        ObjectMapper mapper = new ObjectMapper();
-
-        JsonNode WordListJson = mapper.readTree(input);
-        int wordSum = WordListJson.get("count").asInt();
+        int wordSum = input.get("count").asInt();
+        mainDict.setVerify(input.get("verify").asText());
         mainDict.setCount(wordSum);
         int wordKey = 0;
 
-        for (Iterator<JsonNode> it = WordListJson.get("data").iterator(); it.hasNext(); wordKey++)
+        for (Iterator<JsonNode> it = input.get("data").iterator(); it.hasNext(); wordKey++)
         {
             JsonNode NowEntry = it.next();
             DictEntry newEntry = new DictEntry();
 
-            newEntry.setFamiliar(NowEntry.get("familiar").asInt())
+            newEntry.setFamiliar(Familiar.valueOf(NowEntry.get("familiar").asText("haveNotAppeared")))
                     .setEnS(NowEntry.get("enS").asText());
 
             for (JsonNode NowChTrans : NowEntry.get("chS"))
@@ -72,13 +51,6 @@ public class DictOperation
             }
 
             mainDict.addEntry(wordKey, newEntry);
-            wordCountLabel.setText(String.format("%04d/%04d", wordKey + 1, wordSum));
-
-            int tmp_cal = (wordKey + 1) * 100 / wordSum;
-            processLabel.setText("█".repeat(Math.max(0, tmp_cal / 10)) +
-                    "━".repeat(Math.max(0, 10 - (tmp_cal / 10))));
-
-            Main.MultiWindowGUI.updateScreen();
         }
 
         try
@@ -88,17 +60,15 @@ public class DictOperation
         {
             e.printStackTrace();
         }
-
-        loadingWindow.close();
-        Main.MultiWindowGUI.updateScreen();
     }
 
-    public static boolean verifyDict(InputStream input) throws IOException
+    public static JsonNode readAndVerifyDictJson(InputStream input) throws IOException
     {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode WordListJson = mapper.readTree(input);
         if (WordListJson.has("verify"))
-            return WordListJson.get("verify").asText().equals("T2N0QXV0dW1u");
-        return false;
+            if (WordListJson.get("verify").asText().equals("T2N0QXV0dW1u"))
+                return WordListJson;
+        return null;
     }
 }
