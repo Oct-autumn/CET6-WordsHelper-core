@@ -3,7 +3,6 @@ package cn.octautumn.CET6WordsHelper_core.RootClass;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.DialogWindow;
 
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class WarningDialog extends DialogWindow

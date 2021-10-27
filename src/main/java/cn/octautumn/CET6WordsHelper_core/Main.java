@@ -1,13 +1,15 @@
 package cn.octautumn.CET6WordsHelper_core;
 
-import cn.octautumn.CET6WordsHelper_core.OnRunning.OnRunning;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.Dictionary;
+import cn.octautumn.CET6WordsHelper_core.OnRunning.OnRunning;
 import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.gui2.*;
-import com.googlecode.lanterna.screen.*;
-import com.googlecode.lanterna.terminal.*;
-import com.googlecode.lanterna.terminal.swing.AWTTerminalFontConfiguration;
-import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
+import com.googlecode.lanterna.gui2.DefaultWindowManager;
+import com.googlecode.lanterna.gui2.EmptySpace;
+import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.TerminalScreen;
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
 
@@ -40,6 +42,8 @@ public class Main
 
         OnQuit.onQuit(MultiWindowGUI);
 
+        MultiWindowGUI.updateScreen();
         screen.close();
+        terminal.close();
     }
 }

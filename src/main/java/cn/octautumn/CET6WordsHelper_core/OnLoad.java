@@ -1,5 +1,7 @@
 package cn.octautumn.CET6WordsHelper_core;
 
+import cn.octautumn.CET6WordsHelper_core.Dialogs.WarningDialog_DictFileChange;
+import cn.octautumn.CET6WordsHelper_core.Dialogs.WarningDialog_License;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictOperation;
 import cn.octautumn.CET6WordsHelper_core.RootClass.WarningDialog;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +19,8 @@ public class OnLoad
 
     public static void onLoad(MultiWindowTextGUI gui) throws IOException, RuntimeException
     {
+        new WarningDialog_License().showDialog(gui);
+
         //加载词库
         final String JsonFilePath = WorkingDir + fileSeparator + "CET6-Words.json"; //常量 词库文件路径
         wordListJsonFile = new File(JsonFilePath);

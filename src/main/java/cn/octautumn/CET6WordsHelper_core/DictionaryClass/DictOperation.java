@@ -1,20 +1,12 @@
 package cn.octautumn.CET6WordsHelper_core.DictionaryClass;
 
-import cn.octautumn.CET6WordsHelper_core.Main;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.googlecode.lanterna.gui2.*;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
-import java.util.List;
 
-import static cn.octautumn.CET6WordsHelper_core.Main.main;
 import static cn.octautumn.CET6WordsHelper_core.Main.mainDict;
 
 public class DictOperation

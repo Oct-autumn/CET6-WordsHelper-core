@@ -1,5 +1,6 @@
 package cn.octautumn.CET6WordsHelper_core.OnRunning;
 
+import cn.octautumn.CET6WordsHelper_core.Dialogs.WarningDialog_License;
 import cn.octautumn.CET6WordsHelper_core.Main;
 import cn.octautumn.CET6WordsHelper_core.OnRunning.ChallengeMode.*;
 import com.googlecode.lanterna.TerminalSize;
@@ -51,12 +52,11 @@ public class OnRunning
                         e.printStackTrace();
                     }
                 })
-                .addItem("", () -> {
-                })
                 .addItem("词库操作", () -> {
                 })
                 .addItem("", () -> {
                 })
+                .addItem("GPL证书", () -> new WarningDialog_License().showDialog(gui))
                 .addItem("退出", menuWindow::close);
         panel.addComponent(menu);
 

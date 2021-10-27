@@ -1,11 +1,7 @@
-package cn.octautumn.CET6WordsHelper_core;
+package cn.octautumn.CET6WordsHelper_core.Dialogs;
 
 
 import cn.octautumn.CET6WordsHelper_core.RootClass.WarningDialog;
-import com.googlecode.lanterna.gui2.dialogs.FileDialogBuilder;
-
-import java.io.*;
-import java.util.List;
 
 //警告
 public class WarningDialog_DictFileChange extends WarningDialog

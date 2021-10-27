@@ -2,7 +2,6 @@ package cn.octautumn.CET6WordsHelper_core;
 
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.ChTrans;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
-import cn.octautumn.CET6WordsHelper_core.DictionaryClass.Familiar;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 
@@ -72,15 +71,10 @@ public class OnQuit
             DictEntry it = mainDict.getData().get(i);
             switch (it.getFamiliar())
             {
-                case familiar:
-                    outputWriter_Familiar.write("WordID-" + i + "  " + it.getEnS() + '\n');
-                    break;
-                case notFamiliar:
-                case passInMode1:
-                case passInMode2:
+                case familiar -> outputWriter_Familiar.write("WordID-" + i + "  " + it.getEnS() + '\n');
+                case notFamiliar, passInMode1, passInMode2 -> {
                     StringBuilder strBuilder = new StringBuilder();
                     strBuilder.append(it.getEnS());
-
                     for (ChTrans itChT : it.getChS())
                     {
                         strBuilder.append("\n\t").append(itChT.getPos()).append(". ");
@@ -95,11 +89,13 @@ public class OnQuit
                     }
                     strBuilder.append('\n');
                     outputWriter_notFamiliar.write(strBuilder.toString());
-                    break;
+                }
             }
         }
 
         outputWriter_Familiar.close();
         outputWriter_notFamiliar.close();
+
+        System.exit(0);
     }
 }

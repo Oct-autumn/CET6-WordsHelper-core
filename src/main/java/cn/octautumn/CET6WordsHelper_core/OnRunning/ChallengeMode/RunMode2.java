@@ -5,7 +5,10 @@ import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.Familiar;
 import cn.octautumn.CET6WordsHelper_core.Main;
 import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.BasicWindow;
+import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.Panel;
+import com.googlecode.lanterna.gui2.TextBox;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,12 +40,12 @@ public class RunMode2 extends RunMode
         AtomicBoolean isCorrect = new AtomicBoolean(false);
         int errorCount = 0;
         int wordSum = Main.mainDict.getCount();
-        int selWordId = -1;
+        int selWordId;
 
         for (int wordCount = 0; wordCount < 20; wordCount++)
         {
             int randID;
-            DictEntry correctAnswer = new DictEntry();
+            DictEntry correctAnswer;
             do
             {
                 randID = (int) (Math.random() * (wordSum));
@@ -51,7 +54,7 @@ public class RunMode2 extends RunMode
             selWordId = randID;
 
             String correctSpell = correctAnswer.getEnS();
-            System.out.println(correctSpell);
+            //System.out.println(correctSpell);
             tipLabel.setText("");
             tipLabel.setForegroundColor(TextColor.ANSI.BLACK)
                     .setText("根据提示在下面拼写该单词： ");

@@ -1,9 +1,9 @@
 package cn.octautumn.CET6WordsHelper_core.OnRunning.ChallengeMode;
 
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.ChTrans;
+import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
 import cn.octautumn.CET6WordsHelper_core.DictionaryClass.Familiar;
 import cn.octautumn.CET6WordsHelper_core.Main;
-import cn.octautumn.CET6WordsHelper_core.DictionaryClass.DictEntry;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.ActionListBox;
 import com.googlecode.lanterna.gui2.BasicWindow;
