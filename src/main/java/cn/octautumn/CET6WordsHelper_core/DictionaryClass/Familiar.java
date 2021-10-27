@@ -6,5 +6,7 @@ public enum Familiar
     notFamiliar,
     familiar,
     passInMode1,
-    passInMode2
+    N_passInMode1,
+    passInMode2,
+    N_passInMode2
 }

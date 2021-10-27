@@ -136,8 +136,9 @@ public class RunMode1 extends RunMode
                             .setText("恭喜你，回答正确. 你已答对" + (wordCount - errorCount + 1) + "题 ");
                     switch (Main.mainDict.getData().get(selWordId).getFamiliar())
                     {
-                        case haveNotAppeared, notFamiliar -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.passInMode1);
-                        case passInMode2 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.familiar);
+                        case haveNotAppeared -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.passInMode1);
+                        case notFamiliar -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.N_passInMode1);
+                        case passInMode2, N_passInMode2 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.familiar);
                     }
 
                     try
@@ -158,7 +159,7 @@ public class RunMode1 extends RunMode
                                     "正确答案是：" + correctMeaning + " ");
                     switch (Main.mainDict.getData().get(selWordId).getFamiliar())
                     {
-                        case haveNotAppeared, passInMode1 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.notFamiliar);
+                        case haveNotAppeared, passInMode1, N_passInMode1 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.notFamiliar);
                     }
 
                     transSelections.clearItems();

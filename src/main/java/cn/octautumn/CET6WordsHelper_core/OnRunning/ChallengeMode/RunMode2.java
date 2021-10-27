@@ -62,7 +62,7 @@ public class RunMode2 extends RunMode
 
             int tipSize;   //智能提示，减少单词过短时提示过多[Doge]
             if (correctAnswer.getFamiliar().equals(Familiar.notFamiliar)
-                    || correctAnswer.getFamiliar().equals(Familiar.passInMode1)
+                    || correctAnswer.getFamiliar().equals(Familiar.N_passInMode1)
                     || correctSpell.length() < 3)
                 tipSize = 0;
             else if (correctSpell.length() < 6)
@@ -147,8 +147,9 @@ public class RunMode2 extends RunMode
                         .setText("恭喜你，回答正确. 你已答对" + (wordCount - errorCount + 1) + "题 ");
                 switch (Main.mainDict.getData().get(selWordId).getFamiliar())
                 {
-                    case haveNotAppeared, notFamiliar -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.passInMode2);
-                    case passInMode1 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.familiar);
+                    case haveNotAppeared -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.passInMode2);
+                    case notFamiliar -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.N_passInMode2);
+                    case passInMode1, N_passInMode1 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.familiar);
                 }
 
                 try
@@ -169,7 +170,7 @@ public class RunMode2 extends RunMode
                                 "正确答案是：" + correctSpell + " ");
                 switch (Main.mainDict.getData().get(selWordId).getFamiliar())
                 {
-                    case haveNotAppeared, passInMode2 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.notFamiliar);
+                    case haveNotAppeared, passInMode2, N_passInMode2 -> Main.mainDict.getData().get(selWordId).setFamiliar(Familiar.notFamiliar);
                 }
 
                 try

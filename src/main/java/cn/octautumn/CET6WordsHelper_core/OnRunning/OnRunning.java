@@ -5,10 +5,11 @@ import cn.octautumn.CET6WordsHelper_core.Main;
 import cn.octautumn.CET6WordsHelper_core.OnRunning.ChallengeMode.*;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.table.Table;
 
+import javax.management.StandardMBean;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class OnRunning
 {
@@ -42,11 +43,11 @@ public class OnRunning
                         e.printStackTrace();
                     }
                 })
-                .addItem("单词记忆情况", () -> {
+                .addItem("单词复习", () -> {
                     menuWindow.setVisible(false);
                     try
                     {
-                        ShowHistory(gui, menuWindow);
+                        ShowReview(gui, menuWindow);
                     } catch (IOException e)
                     {
                         e.printStackTrace();
@@ -63,8 +64,6 @@ public class OnRunning
         menuWindow.setComponent(panel);
 
         gui.addWindowAndWait(menuWindow);
-        if (gui.getWindows().contains(menuWindow))
-            gui.setActiveWindow(menuWindow);
         gui.updateScreen();
     }
 
@@ -82,12 +81,6 @@ public class OnRunning
         panel.addComponent(2, new Label("在下列选项中选出与该单词对应的译义"));  //tipLabel
         panel.addComponent(3, new ActionListBox(new TerminalSize(30, 4)));  //transSelections
         panel.addComponent(4, new Label("<-------------------------------------->"));
-        panel.addComponent(5, new Button("EXIT", () -> {
-            thisWindow.close();
-            menuWindow.setVisible(true);
-            Main.MultiWindowGUI.setActiveWindow(menuWindow);
-            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
-        }));
         thisWindow.setComponent(panel);
 
         RunMode1 Mode1func = new RunMode1(thisWindow, menuWindow, panel);
@@ -96,9 +89,15 @@ public class OnRunning
         func.start();
         counter.start();
 
+        panel.addComponent(5, new Button("EXIT", () -> {
+            Mode1func.Status = 4;
+            thisWindow.close();
+            menuWindow.setVisible(true);
+            Main.MultiWindowGUI.setActiveWindow(menuWindow);
+            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
+        }));
+
         gui.addWindowAndWait(thisWindow);
-        if (gui.getWindows().contains(thisWindow))
-            gui.setActiveWindow(thisWindow);
         gui.updateScreen();
     }
 
@@ -118,12 +117,6 @@ public class OnRunning
         panel.addComponent(4, new TextBox(new TerminalSize(30, 1), TextBox.Style.MULTI_LINE)
                 .setText(""));  //answer
         panel.addComponent(5, new Label("<-------------------------------------->"));
-        panel.addComponent(6, new Button("EXIT", () -> {
-            thisWindow.close();
-            menuWindow.setVisible(true);
-            Main.MultiWindowGUI.setActiveWindow(menuWindow);
-            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
-        }));
 
         thisWindow.setComponent(panel);
 
@@ -133,14 +126,47 @@ public class OnRunning
         func.start();
         counter.start();
 
+        panel.addComponent(6, new Button("EXIT", () -> {
+            Mode2func.Status = 4;
+            thisWindow.close();
+            menuWindow.setVisible(true);
+            Main.MultiWindowGUI.setActiveWindow(menuWindow);
+            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
+        }));
+
         gui.addWindowAndWait(thisWindow);
-        if (gui.getWindows().contains(thisWindow))
-            gui.setActiveWindow(thisWindow);
         gui.updateScreen();
     }
 
-    public static void ShowHistory(MultiWindowTextGUI gui, BasicWindow menuWindow) throws IOException, RuntimeException
+    public static void ShowReview(MultiWindowTextGUI gui, BasicWindow menuWindow) throws IOException, RuntimeException
     {
+        BasicWindow thisWindow = new BasicWindow("单词复习");
+        thisWindow.setHints(List.of(Window.Hint.CENTERED));
 
+        Panel panel = new Panel();
+        panel.setLayoutManager(new GridLayout(1));
+
+        panel.addComponent(0, new Label("搜索："));   //wordLabel
+        panel.addComponent(1, new TextBox(new TerminalSize(30, 1), TextBox.Style.MULTI_LINE)
+                .setText(""));  //answer
+        panel.addComponent(2, new Label("<-------------------------------------->"));
+        Table<String> table = new Table<>("ID", "单词");
+        table.setPreferredSize(new TerminalSize(30, 8));
+
+        panel.addComponent(3,table);
+        panel.addComponent(4, new Label("<-------------------------------------->"));
+        panel.addComponent(5, new Button("EXIT", () -> {
+            thisWindow.close();
+            menuWindow.setVisible(true);
+            Main.MultiWindowGUI.setActiveWindow(menuWindow);
+            Main.MultiWindowGUI.waitForWindowToClose(menuWindow);
+        }));
+
+        thisWindow.setComponent(panel);
+
+        LookReview.ShowReview(panel);
+
+        gui.addWindowAndWait(thisWindow);
+        gui.updateScreen();
     }
 }
